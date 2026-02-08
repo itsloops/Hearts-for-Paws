@@ -11,7 +11,7 @@ export default function Home() {
     .slice(0, 3);
 
   // Get upcoming events (limit 3)
-  const upcomingEvents = events
+  const upcomingEvents = [...events]
     .sort((a, b) => new Date(a.date) - new Date(b.date))
     .slice(0, 3);
 

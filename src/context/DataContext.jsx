@@ -11,7 +11,10 @@ export function DataProvider({ children }) {
   const loadState = (key, defaultValue) => {
     try {
       const saved = localStorage.getItem(key);
-      return saved ? JSON.parse(saved) : defaultValue;
+      if (!saved) return defaultValue;
+      const parsed = JSON.parse(saved);
+      // Ensure we don't return null if parsing resulted in null
+      return parsed === null ? defaultValue : parsed;
     } catch (e) {
       console.error("Error loading state from localStorage", e);
       return defaultValue;
@@ -156,10 +159,10 @@ export function DataProvider({ children }) {
     }
   ];
 
-  const [events, setEvents] = useState(() => loadState('hfp_events', defaultEvents));
+  const [events, setEvents] = useState(() => loadState('hfp_events_live', defaultEvents));
 
   useEffect(() => {
-    localStorage.setItem('hfp_events', JSON.stringify(events));
+    localStorage.setItem('hfp_events_live', JSON.stringify(events));
   }, [events]);
 
   const addEvent = (newEvent) => {
