@@ -49,10 +49,10 @@ export function DataProvider({ children }) {
     }
   ];
 
-  const [posts, setPosts] = useState(() => loadState('hfp_posts', defaultPosts));
+  const [posts, setPosts] = useState(() => loadState('hfp_posts_live', defaultPosts));
 
   useEffect(() => {
-    localStorage.setItem('hfp_posts', JSON.stringify(posts));
+    localStorage.setItem('hfp_posts_live', JSON.stringify(posts));
   }, [posts]);
 
   const addPost = (newPost) => {
@@ -177,10 +177,10 @@ export function DataProvider({ children }) {
   // --- Rescues & Fosters State ---
   const defaultOrgs = [];
 
-  const [organizations, setOrganizations] = useState(() => loadState('hfp_orgs', defaultOrgs));
+  const [organizations, setOrganizations] = useState(() => loadState('hfp_orgs_live', defaultOrgs));
 
   useEffect(() => {
-    localStorage.setItem('hfp_orgs', JSON.stringify(organizations));
+    localStorage.setItem('hfp_orgs_live', JSON.stringify(organizations));
   }, [organizations]);
 
   const addOrganization = (newOrg) => {
