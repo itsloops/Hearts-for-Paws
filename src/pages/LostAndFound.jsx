@@ -27,10 +27,10 @@ export default function LostAndFound() {
   const filteredPosts = posts.filter(post => {
     const matchesType = filterType === 'all' || post.type === filterType;
     const matchesSearch = 
-      post.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.breed?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.description?.toLowerCase().includes(searchTerm.toLowerCase());
+      (post.name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+      (post.breed?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+      (post.location?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+      (post.description?.toLowerCase() || '').includes(searchTerm.toLowerCase());
     return matchesType && matchesSearch;
   });
 
