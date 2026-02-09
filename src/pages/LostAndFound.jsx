@@ -32,7 +32,8 @@ export default function LostAndFound() {
     description: '',
     distinctiveMarkings: '',
     image: '',
-    contactEmail: ''
+    contactEmail: '',
+    contactPhone: ''
   });
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -87,7 +88,8 @@ export default function LostAndFound() {
         description: '', 
         distinctiveMarkings: '',
         image: '', 
-        contactEmail: ''
+        contactEmail: '', 
+        contactPhone: '' 
     });
   };
 
@@ -260,16 +262,29 @@ export default function LostAndFound() {
                 />
             </div>
 
-            <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Contact Email</label>
-                <input
-                    type="email"
-                    required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
-                    value={formData.contactEmail}
-                    onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
-                    placeholder="your@email.com"
-                />
+            <div className="grid grid-cols-2 gap-4">
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">Contact Email</label>
+                    <input
+                        type="email"
+                        required
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
+                        value={formData.contactEmail}
+                        onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
+                        placeholder="your@email.com"
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">Contact Phone</label>
+                    <input
+                        type="tel"
+                        required
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
+                        value={formData.contactPhone}
+                        onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
+                        placeholder="(555) 123-4567"
+                    />
+                </div>
             </div>
 
             <button
@@ -442,6 +457,16 @@ export default function LostAndFound() {
                   >
                     <MessageCircle size={16} /> Message
                   </button>
+                  {post.contactPhone && (
+                      <a 
+                        href={`tel:${post.contactPhone}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex-1 flex items-center justify-center gap-2 bg-green-50 text-green-600 py-2 rounded-md hover:bg-green-100 border border-green-200 transition-colors"
+                      >
+                          <Phone size={16} /> Call
+                      </a>
+                  )}
               </div>
 
               {/* Only show button if user is logged in AND owns the post */}
