@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useData } from '../context/DataContext';
-import { MapPin, Calendar, CheckCircle, Phone, Mail, ArrowLeft, Share2, AlertTriangle } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { MapPin, Calendar, CheckCircle, Phone, Mail, ArrowLeft, Share2, AlertTriangle, MessageCircle } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
+import ContactModal from '../components/ContactModal';
 
 // Reusing the icon fix from PetMap
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -20,9 +23,30 @@ L.Marker.prototype.options.icon = DefaultIcon;
 export default function PetDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { posts } = useData();
+  const { posts, sendMessage } = useData();
+  const { currentUser } = useAuth();
   
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+
   const post = posts.find(p => p.id.toString() === id);
+
+  const handleSendMessage = (content) => {
+    if (!currentUser) {
+      alert('Please log in to send a message.');
+      navigate('/login');
+      return;
+    }
+    
+    sendMessage({
+      fromUserId: currentUser.id,
+      toUserId: post.userId,
+      senderName: currentUser.name || 'Anonymous',
+      subject: `Inquiry about ${post.name}`,
+      content: content
+    });
+    
+    alert('Message sent successfully!');
+  };
 
   if (!post) {
     return (
@@ -187,16 +211,24 @@ export default function PetDetails() {
               <div className="border-t border-gray-100 pt-8 mt-4">
                 <h3 className="text-lg font-bold text-gray-900 mb-4">Contact Information</h3>
                 <div className="flex flex-col sm:flex-row gap-4">
+                    <button 
+                        onClick={() => setIsContactModalOpen(true)}
+                        className="flex-1 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-medium flex items-center justify-center gap-2 shadow-sm"
+                    >
+                        <MessageCircle size={20} />
+                        Message Owner
+                    </button>
+
                     {post.contactEmail && (
                         <a href={`mailto:${post.contactEmail}`} className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-medium flex items-center justify-center gap-2 shadow-sm">
                             <Mail size={20} />
-                            Email Owner
+                            Email
                         </a>
                     )}
                     {post.contactPhone && (
                         <a href={`tel:${post.contactPhone}`} className="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-medium flex items-center justify-center gap-2 shadow-sm">
                             <Phone size={20} />
-                            Call Owner
+                            Call
                         </a>
                     )}
                 </div>
@@ -205,6 +237,15 @@ export default function PetDetails() {
           </div>
         </div>
       </div>
+
+      <ContactModal 
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+        recipientId={post.userId}
+        recipientName="Owner"
+        subject={`Inquiry about ${post.name}`}
+        onSend={handleSendMessage}
+      />
     </div>
   );
 }

@@ -130,6 +130,53 @@ export default function Home() {
           </section>
         )}
 
+        {/* Success Stories Section */}
+        {successStories.length > 0 && (
+          <section className="mb-16">
+            <div className="flex justify-between items-end mb-6">
+              <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                <Heart className="text-red-500 fill-red-500" size={24} />
+                Success Stories
+              </h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {successStories.map(post => (
+                <div key={post.id} className="bg-white rounded-xl shadow-sm overflow-hidden border border-green-100 hover:shadow-md transition-shadow relative">
+                  <div className="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold uppercase z-10 shadow-sm flex items-center gap-1">
+                    <Heart size={12} className="fill-white" />
+                    Reunited
+                  </div>
+                  <div className="h-48 overflow-hidden bg-gray-100 flex items-center justify-center relative">
+                     <div className="absolute inset-0 bg-green-900/10 z-0"></div>
+                    {post.image ? (
+                        <img src={post.image} alt={post.name} className="w-full h-full object-cover" />
+                    ) : (
+                        <div className="flex flex-col items-center text-gray-400">
+                            <ImageIcon size={48} />
+                            <span className="text-sm mt-2 font-medium">No Photo</span>
+                        </div>
+                    )}
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-bold text-lg text-gray-900 mb-1">{post.name}</h3>
+                    <p className="text-gray-600 text-sm mb-3">
+                        "Reunited with family in {post.location}!"
+                    </p>
+                    <div className="flex items-center justify-between text-xs text-gray-500 border-t border-gray-100 pt-3">
+                        <span className="flex items-center gap-1">
+                            <Calendar size={12} />
+                            Reported: {new Date(post.date).toLocaleDateString()}
+                        </span>
+                        <span className="text-green-600 font-bold bg-green-50 px-2 py-0.5 rounded">Happy Ending</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Recent Lost Pets Section */}
         <section className="mb-16">
           <div className="flex justify-between items-end mb-6">

@@ -38,7 +38,12 @@ export function AuthProvider({ children }) {
         // For demo purposes, allow any password or specific 'password'
         // Simulating a successful login for any non-empty email
         if (email) { 
-             const user = { email, name: 'Demo User', id: '123' };
+             let user;
+             if (email.includes('org')) {
+                user = { email, name: 'Happy Paws Rescue', id: 'org1', role: 'organization' };
+             } else {
+                user = { email, name: 'Demo User', id: '123', role: 'user' };
+             }
              localStorage.setItem('user', JSON.stringify(user));
              setCurrentUser(user);
              resolve(user);

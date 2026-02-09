@@ -206,7 +206,17 @@ export function DataProvider({ children }) {
   };
 
   // --- Rescues & Fosters State ---
-  const defaultOrgs = [];
+  const defaultOrgs = [
+    {
+      id: 'org1',
+      name: 'Happy Paws Rescue',
+      location: 'Downtown Metro',
+      description: 'Dedicated to rescuing stray dogs and cats.',
+      contactEmail: 'org@hfp.com',
+      image: null,
+      userId: 'org1'
+    }
+  ];
 
   const [organizations, setOrganizations] = useState(() => loadState('hfp_orgs_live', defaultOrgs));
 
@@ -226,30 +236,52 @@ export function DataProvider({ children }) {
     setOrganizations(organizations.filter(org => org.id !== id));
   };
 
-  const value = {
-    posts,
-    addPost,
-    updatePostStatus,
-    updatePost,
-    deletePost,
-    donationRequests,
-    toggleDonationStatus,
-    addDonationRequest,
-    updateDonationRequest,
-    deleteDonationRequest,
-    events,
-    addEvent,
-    updateEvent,
-    deleteEvent,
-    toggleEventAttendance,
-    organizations,
-    addOrganization,
-    updateOrganization,
-    deleteOrganization
+  // --- Messaging State ---
+  const defaultMessages = [
+    {
+      id: 1,
+      fromUserId: '999',
+      toUserId: '123',
+      senderName: 'Jane Doe',
+      subject: 'Found your dog Buddy',
+      content: 'Hi! I think I saw Buddy near the park entrance this morning. He looked safe but scared.',
+      date: '2023-10-26T10:30:00',
+      read: false
+    }
+  ];
+
+  const [messages, setMessages] = useState(() => loadState('hfp_messages', defaultMessages));
+
+  useEffect(() => {
+    localStorage.setItem('hfp_messages', JSON.stringify(messages));
+  }, [messages]);
+
+  const sendMessage = (message) => {
+    const newMessage = {
+      id: Date.now(),
+      date: new Date().toISOString(),
+      read: false,
+      ...message
+    };
+    setMessages([newMessage, ...messages]);
+  };
+
+  const markMessageAsRead = (id) => {
+    setMessages(messages.map(msg => msg.id === id ? { ...msg, read: true } : msg));
+  };
+
+  const getMessagesForUser = (userId) => {
+    return messages.filter(msg => msg.toUserId === userId);
   };
 
   return (
-    <DataContext.Provider value={value}>
+    <DataContext.Provider value={{
+      posts, addPost, updatePostStatus, updatePost, deletePost,
+      donationRequests, toggleDonationStatus, addDonationRequest, updateDonationRequest, deleteDonationRequest,
+      events, addEvent, updateEvent, deleteEvent, toggleEventAttendance,
+      organizations, addOrganization, updateOrganization, deleteOrganization,
+      messages, sendMessage, markMessageAsRead, getMessagesForUser
+    }}>
       {children}
     </DataContext.Provider>
   );

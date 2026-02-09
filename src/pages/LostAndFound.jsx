@@ -1,14 +1,23 @@
 import { useState } from 'react';
-import { MapPin, Calendar, CheckCircle, XCircle, AlertTriangle, Image as ImageIcon, Phone, Mail, Search, Map, List, Filter } from 'lucide-react';
+import { MapPin, Calendar, CheckCircle, XCircle, AlertTriangle, Image as ImageIcon, Phone, Mail, Search, Map, List, Filter, MessageCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ImageUpload from '../components/ImageUpload';
 import PetMap from '../components/PetMap';
+import ContactModal from '../components/ContactModal';
 
 export default function LostAndFound() {
   const { currentUser } = useAuth();
-  const { posts, addPost, updatePostStatus } = useData();
+  const { posts, addPost, updatePostStatus, sendMessage } = useData();
+  const navigate = useNavigate();
+
+  const [contactModalState, setContactModalState] = useState({
+    isOpen: false,
+    recipientId: null,
+    recipientName: '',
+    subject: ''
+  });
 
   const [formData, setFormData] = useState({
     type: 'lost',
@@ -86,6 +95,25 @@ export default function LostAndFound() {
 
   const toggleStatus = (id) => {
     updatePostStatus(id);
+  };
+
+  const handleSendMessage = (messageData) => {
+    sendMessage(messageData);
+    setContactModalState({ ...contactModalState, isOpen: false });
+    alert('Message sent successfully!');
+  };
+
+  const openMessageModal = (post) => {
+    if (!currentUser) {
+        navigate('/login');
+        return;
+    }
+    setContactModalState({
+        isOpen: true,
+        recipientId: post.userId,
+        recipientName: 'Pet Owner',
+        subject: `Regarding ${post.name || 'your pet'}`
+    });
   };
 
   return (
@@ -423,6 +451,12 @@ export default function LostAndFound() {
                   >
                       View Details
                   </Link>
+                  <button
+                    onClick={() => openMessageModal(post)}
+                    className="flex-1 flex items-center justify-center gap-2 bg-blue-50 text-blue-600 py-2 rounded-md hover:bg-blue-100 border border-blue-200 transition-colors text-sm font-medium"
+                  >
+                    <MessageCircle size={16} /> Message
+                  </button>
                   {post.contactPhone && (
                       <a 
                         href={`tel:${post.contactPhone}`} 
@@ -464,6 +498,15 @@ export default function LostAndFound() {
       )}
       </div>
       )}
+
+      <ContactModal 
+        isOpen={contactModalState.isOpen}
+        onClose={() => setContactModalState({ ...contactModalState, isOpen: false })}
+        recipientId={contactModalState.recipientId}
+        recipientName={contactModalState.recipientName}
+        subject={contactModalState.subject}
+        onSend={handleSendMessage}
+      />
     </div>
   );
 }

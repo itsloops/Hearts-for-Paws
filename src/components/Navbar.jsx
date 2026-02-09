@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Heart, Search, Home, Gift, Calendar, LogIn, LogOut, User, Mail } from 'lucide-react';
+import { Heart, Search, Home, Gift, Calendar, LogIn, LogOut, User, Mail, Building2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Navbar() {
