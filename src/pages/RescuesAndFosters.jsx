@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Phone, Globe, MapPin, Heart, Search, Filter, Home, Plus, Mail, Gift } from 'lucide-react';
+import { Phone, Globe, MapPin, Heart, Search, Filter, Home, Plus, Mail, Gift, Star, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
+import { Link } from 'react-router-dom';
 import ImageUpload from '../components/ImageUpload';
 
 export default function RescuesAndFosters() {
@@ -12,6 +13,12 @@ export default function RescuesAndFosters() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedBreed, setSelectedBreed] = useState('All');
   
+  // Rescue of the Month Logic
+  const currentMonthIndex = new Date().getMonth();
+  const rescueOfTheMonth = organizations.length > 0 
+    ? organizations[currentMonthIndex % organizations.length] 
+    : null;
+
   // Registration Form State
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
