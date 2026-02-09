@@ -93,7 +93,15 @@ export default function PetDetails() {
             <div className="flex justify-between items-start mb-6">
               <div>
                 <h1 className="text-4xl font-bold text-gray-900 mb-2">{post.name || 'Unknown Pet'}</h1>
-                <p className="text-xl text-gray-600">{post.breed}</p>
+                <div className="flex items-center gap-3 text-xl text-gray-600">
+                    <span>{post.breed}</span>
+                    {post.gender && post.gender !== 'unknown' && (
+                        <>
+                            <span>•</span>
+                            <span className="capitalize">{post.gender}</span>
+                        </>
+                    )}
+                </div>
               </div>
               <button 
                 onClick={handleShare}
@@ -113,6 +121,27 @@ export default function PetDetails() {
                 <p className="text-blue-800 leading-relaxed">
                   {post.description || "No additional details provided."}
                 </p>
+                {post.distinctiveMarkings && (
+                    <div className="mt-4 pt-4 border-t border-blue-200">
+                        <span className="font-semibold text-blue-900 block mb-1">Distinctive Markings:</span>
+                        <p className="text-blue-800">{post.distinctiveMarkings}</p>
+                    </div>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                    <span className="block text-gray-500 mb-1">Microchipped</span>
+                    <span className={`font-semibold ${post.microchipped === 'yes' ? 'text-green-600' : post.microchipped === 'no' ? 'text-red-600' : 'text-gray-900'} capitalize`}>
+                        {post.microchipped || 'Unknown'}
+                    </span>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                    <span className="block text-gray-500 mb-1">Collar</span>
+                    <span className={`font-semibold ${post.collar === 'yes' ? 'text-green-600' : post.collar === 'no' ? 'text-red-600' : 'text-gray-900'} capitalize`}>
+                        {post.collar || 'Unknown'}
+                    </span>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -132,7 +161,10 @@ export default function PetDetails() {
                   </div>
                   <div>
                     <span className="block text-sm font-medium text-gray-500">Date Reported</span>
-                    <span className="block text-lg font-semibold text-gray-900">{post.date}</span>
+                    <span className="block text-lg font-semibold text-gray-900">
+                        {post.date}
+                        {post.time && <span className="text-sm font-normal text-gray-500 ml-2">at {post.time}</span>}
+                    </span>
                   </div>
                 </div>
               </div>

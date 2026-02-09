@@ -14,9 +14,14 @@ export default function LostAndFound() {
     type: 'lost',
     name: '',
     breed: '',
+    gender: 'unknown',
+    microchipped: 'unknown',
+    collar: 'unknown',
     location: '',
     date: '',
+    time: '',
     description: '',
+    distinctiveMarkings: '',
     image: '',
     contactEmail: '',
     contactPhone: ''
@@ -47,7 +52,22 @@ export default function LostAndFound() {
       userId: currentUser.id
     };
     addPost(newPost);
-    setFormData({ type: 'lost', name: '', breed: '', location: '', date: '', description: '', image: '', contactEmail: '', contactPhone: '' });
+    setFormData({ 
+        type: 'lost', 
+        name: '', 
+        breed: '', 
+        gender: 'unknown',
+        microchipped: 'unknown',
+        collar: 'unknown',
+        location: '', 
+        date: '', 
+        time: '',
+        description: '', 
+        distinctiveMarkings: '',
+        image: '', 
+        contactEmail: '', 
+        contactPhone: '' 
+    });
   };
 
   const toggleStatus = (id) => {
@@ -77,29 +97,37 @@ export default function LostAndFound() {
                 </div>
                 <div>
                 <label className="block text-sm font-medium text-gray-700">Date</label>
-                <input
-                    type="date"
-                    required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
-                    value={formData.date}
-                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                />
+                <div className="flex gap-2">
+                    <input
+                        type="date"
+                        required
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
+                        value={formData.date}
+                        onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                    />
+                    <input
+                        type="time"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
+                        value={formData.time}
+                        onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                    />
+                </div>
                 </div>
             </div>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                <label className="block text-sm font-medium text-gray-700">Pet Name (if known)</label>
+                <label className="block text-sm font-medium text-gray-700">Pet Name</label>
                 <input
                     type="text"
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g. Buddy"
+                    placeholder="Unknown if not sure"
                 />
                 </div>
                 <div>
-                <label className="block text-sm font-medium text-gray-700">Breed/Description</label>
+                <label className="block text-sm font-medium text-gray-700">Breed/Species</label>
                 <input
                     type="text"
                     required
@@ -108,6 +136,45 @@ export default function LostAndFound() {
                     onChange={(e) => setFormData({ ...formData, breed: e.target.value })}
                     placeholder="e.g. Golden Retriever"
                 />
+                </div>
+                <div>
+                <label className="block text-sm font-medium text-gray-700">Gender</label>
+                <select
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
+                    value={formData.gender}
+                    onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                >
+                    <option value="unknown">Unknown</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">Microchipped?</label>
+                    <select
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
+                        value={formData.microchipped}
+                        onChange={(e) => setFormData({ ...formData, microchipped: e.target.value })}
+                    >
+                        <option value="unknown">Unknown</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">Wearing Collar?</label>
+                    <select
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
+                        value={formData.collar}
+                        onChange={(e) => setFormData({ ...formData, collar: e.target.value })}
+                    >
+                        <option value="unknown">Unknown</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
                 </div>
             </div>
 
@@ -130,7 +197,26 @@ export default function LostAndFound() {
                     rows="3"
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="e.g. Has a red collar, needs insulin daily, very shy..."
+                    placeholder="e.g. Needs insulin daily, very shy..."
+                />
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium text-gray-700">Distinctive Markings</label>
+                <input
+                    type="text"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
+                    value={formData.distinctiveMarkings}
+                    onChange={(e) => setFormData({ ...formData, distinctiveMarkings: e.target.value })}
+                    placeholder="e.g. White spot on chest, limps on left leg"
+                />
+            </div>
+
+            <div className="mb-4">
+                <ImageUpload 
+                    onImageSelect={(base64) => setFormData({ ...formData, image: base64 })}
+                    currentImage={formData.image}
+                    label="Upload Photo of Pet"
                 />
             </div>
 
@@ -158,12 +244,6 @@ export default function LostAndFound() {
                     />
                 </div>
             </div>
-
-            <ImageUpload 
-                onImageSelect={(base64) => setFormData({ ...formData, image: base64 })}
-                currentImage={formData.image}
-                label="Photo of Pet"
-            />
 
             <button
                 type="submit"
