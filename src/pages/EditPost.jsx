@@ -215,7 +215,7 @@ export default function EditPost() {
                 />
             </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="mb-4">
             <div>
                 <label className="block text-sm font-medium text-gray-700">Contact Email</label>
                 <input
@@ -224,16 +224,6 @@ export default function EditPost() {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
                     value={formData.contactEmail}
                     onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
-                />
-            </div>
-            <div>
-                <label className="block text-sm font-medium text-gray-700">Contact Phone</label>
-                <input
-                    type="tel"
-                    required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
-                    value={formData.contactPhone}
-                    onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
                 />
             </div>
           </div>

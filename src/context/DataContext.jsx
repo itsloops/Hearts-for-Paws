@@ -47,8 +47,7 @@ export function DataProvider({ children }) {
       image: null,
       status: 'found',
       userId: '999', // Another user
-      contactEmail: 'finder@example.com',
-      contactPhone: '555-0102'
+      contactEmail: 'finder@example.com'
     }
   ];
 

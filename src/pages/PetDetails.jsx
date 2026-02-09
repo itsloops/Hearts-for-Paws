@@ -225,12 +225,6 @@ export default function PetDetails() {
                             Email
                         </a>
                     )}
-                    {post.contactPhone && (
-                        <a href={`tel:${post.contactPhone}`} className="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-medium flex items-center justify-center gap-2 shadow-sm">
-                            <Phone size={20} />
-                            Call
-                        </a>
-                    )}
                 </div>
               </div>
             </div>

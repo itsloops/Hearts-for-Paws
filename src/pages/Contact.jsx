@@ -55,17 +55,6 @@ export default function Contact() {
               </div>
 
               <div className="flex items-start">
-                <div className="bg-green-100 p-3 rounded-full mr-4">
-                  <Phone className="text-green-600 w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">Phone</h3>
-                  <p className="text-gray-600">(555) 123-4567</p>
-                  <p className="text-gray-500 text-sm mt-1">Mon-Fri from 8am to 5pm.</p>
-                </div>
-              </div>
-
-              <div className="flex items-start">
                 <div className="bg-purple-100 p-3 rounded-full mr-4">
                   <MapPin className="text-purple-600 w-6 h-6" />
                 </div>

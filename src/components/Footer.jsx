@@ -14,7 +14,7 @@ export default function Footer() {
               <span>Hearts for Paws</span>
             </div>
             <p className="text-gray-400 text-sm">
-              Connecting pets with loving homes and building a stronger animal welfare community since 2023.
+              Connecting pets with loving homes and building a stronger animal welfare community since 2026.
             </p>
           </div>
 
@@ -39,10 +39,6 @@ export default function Footer() {
               <li className="flex items-center">
                 <Mail size={16} className="mr-2" />
                 info@heartsforpaws.org
-              </li>
-              <li className="flex items-center">
-                <Phone size={16} className="mr-2" />
-                (555) 123-4567
               </li>
               <li className="mt-4">
                 <Link to="/contact" className="text-blue-400 hover:text-blue-300 underline">Send us a message</Link>
