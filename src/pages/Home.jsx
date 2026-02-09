@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
-import { MapPin, Calendar, ArrowRight, Heart, AlertCircle, Home as HomeIcon, Image as ImageIcon } from 'lucide-react';
+import { MapPin, Calendar, ArrowRight, Heart, AlertCircle, Home as HomeIcon, Image as ImageIcon, Users } from 'lucide-react';
 
 export default function Home() {
   const { posts, events, organizations } = useData();
+
+  const meetupTypes = ['Social Meetup', 'Walking Group'];
 
   // Get recent active lost pets (limit 3)
   const recentLostPets = posts
@@ -15,8 +17,15 @@ export default function Home() {
     .filter(post => post.status === 'reunited')
     .slice(0, 3);
 
-  // Get upcoming events (limit 3)
+  // Get upcoming OFFICIAL events (limit 3)
   const upcomingEvents = [...events]
+    .filter(event => !meetupTypes.includes(event.type))
+    .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .slice(0, 3);
+
+  // Get upcoming MEETUPS (limit 3)
+  const upcomingMeetups = [...events]
+    .filter(event => meetupTypes.includes(event.type))
     .sort((a, b) => new Date(a.date) - new Date(b.date))
     .slice(0, 3);
 
@@ -97,27 +106,76 @@ export default function Home() {
         {/* Upcoming Events Section */}
         <section className="mb-16">
           <div className="flex justify-between items-end mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">Upcoming Events</h2>
-            <Link to="/events" className="text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1">
+            <h2 className="text-2xl font-bold text-gray-800">Community Events</h2>
+            <Link to="/events?tab=events" className="text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1">
               View Calendar <ArrowRight size={16} />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {upcomingEvents.map(event => (
-              <div key={event.id} className="bg-white rounded-xl p-6 shadow-sm border border-purple-100 hover:border-purple-200 transition-colors">
-                <div className="text-purple-600 font-bold mb-2 text-sm uppercase tracking-wide">
-                  {new Date(event.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                </div>
-                <h3 className="font-bold text-gray-900 text-lg mb-2">{event.title}</h3>
-                <div className="flex items-center text-gray-500 text-sm mb-4">
-                  <MapPin size={14} className="mr-1" />
-                  {event.location}
-                </div>
-                <p className="text-gray-600 text-sm line-clamp-2">{event.description}</p>
-              </div>
-            ))}
+          {upcomingEvents.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {upcomingEvents.map(event => (
+                <Link to="/events?tab=events" key={event.id} className="block bg-white rounded-xl p-6 shadow-sm border border-purple-100 hover:border-purple-200 transition-colors">
+                  <div className="text-purple-600 font-bold mb-2 text-sm uppercase tracking-wide">
+                    {new Date(event.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                  </div>
+                  <h3 className="font-bold text-gray-900 text-lg mb-2">{event.title}</h3>
+                  <div className="flex items-center text-gray-500 text-sm mb-4">
+                    <MapPin size={14} className="mr-1" />
+                    {event.location}
+                  </div>
+                  <p className="text-gray-600 text-sm line-clamp-2">{event.description}</p>
+                </Link>
+              ))}
+            </div>
+          ) : (
+             <div className="bg-white p-8 rounded-xl text-center text-gray-500 border border-dashed border-gray-300">
+               No upcoming official events scheduled.
+             </div>
+          )}
+        </section>
+
+        {/* Upcoming Meetups Section */}
+        <section className="mb-16">
+          <div className="flex justify-between items-end mb-6">
+            <h2 className="text-2xl font-bold text-gray-800">Upcoming Meetups</h2>
+            <Link to="/events?tab=meetups" className="text-pink-600 hover:text-pink-700 font-medium flex items-center gap-1">
+              Join a Meetup <ArrowRight size={16} />
+            </Link>
           </div>
+
+          {upcomingMeetups.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {upcomingMeetups.map(meetup => (
+                <Link to="/events?tab=meetups" key={meetup.id} className="block bg-white rounded-xl p-6 shadow-sm border border-pink-100 hover:border-pink-200 transition-colors relative overflow-hidden">
+                  <div className="absolute top-0 right-0 bg-pink-50 text-pink-600 px-3 py-1 rounded-bl-lg text-xs font-bold uppercase">
+                    {meetup.type}
+                  </div>
+                  <div className="text-pink-600 font-bold mb-2 text-sm uppercase tracking-wide flex items-center gap-2">
+                    <Calendar size={14} />
+                    {new Date(meetup.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                  </div>
+                  <h3 className="font-bold text-gray-900 text-lg mb-2">{meetup.title}</h3>
+                  <div className="flex items-center text-gray-500 text-sm mb-4">
+                    <MapPin size={14} className="mr-1" />
+                    {meetup.location}
+                  </div>
+                  
+                  <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-50">
+                    <div className="flex items-center text-gray-500 text-xs">
+                        <Users size={14} className="mr-1" />
+                        {meetup.attendees?.length || 0} going
+                    </div>
+                    <span className="text-pink-600 text-sm font-medium hover:underline">View Details</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white p-8 rounded-xl text-center text-gray-500 border border-dashed border-gray-300">
+              No upcoming meetups scheduled. Be the first to host one!
+            </div>
+          )}
         </section>
 
         {/* Featured Rescues Section */}

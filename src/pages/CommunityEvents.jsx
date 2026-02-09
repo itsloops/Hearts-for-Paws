@@ -1,17 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Calendar, MapPin, Plus, Clock, Tag, Filter, Users, HeartHandshake, Mail, Check, UserPlus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import ImageUpload from '../components/ImageUpload';
+import { useSearchParams } from 'react-router-dom';
 
 export default function CommunityEvents() {
   const { currentUser } = useAuth();
   const { events, addEvent, toggleEventAttendance } = useData();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [activeTab, setActiveTab] = useState('events'); // 'events' or 'meetups'
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') === 'meetups' ? 'meetups' : 'events'); 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('All');
   const [showForm, setShowForm] = useState(false);
+
+  // Sync tab with URL
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab === 'meetups' || tab === 'events') {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setSearchParams({ tab });
+    setSelectedType('All');
+  };
 
   const [formData, setFormData] = useState({
     title: '',
@@ -91,7 +107,7 @@ export default function CommunityEvents() {
         {/* Tab Switcher */}
         <div className="flex bg-gray-100 p-1 rounded-lg">
           <button
-            onClick={() => { setActiveTab('events'); setSelectedType('All'); }}
+            onClick={() => handleTabChange('events')}
             className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all ${
               activeTab === 'events' 
                 ? 'bg-white text-purple-600 shadow-sm font-medium' 
@@ -102,7 +118,7 @@ export default function CommunityEvents() {
             Official Events
           </button>
           <button
-            onClick={() => { setActiveTab('meetups'); setSelectedType('All'); }}
+            onClick={() => handleTabChange('meetups')}
             className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all ${
               activeTab === 'meetups' 
                 ? 'bg-white text-pink-600 shadow-sm font-medium' 
