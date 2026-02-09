@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { Calendar, MapPin, Plus, Clock, Tag, Filter, Users, HeartHandshake, Mail } from 'lucide-react';
+import { Calendar, MapPin, Plus, Clock, Tag, Filter, Users, HeartHandshake, Mail, Check, UserPlus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import ImageUpload from '../components/ImageUpload';
 
 export default function CommunityEvents() {
   const { currentUser } = useAuth();
-  const { events, addEvent } = useData();
+  const { events, addEvent, toggleEventAttendance } = useData();
 
   const [activeTab, setActiveTab] = useState('events'); // 'events' or 'meetups'
   const [searchTerm, setSearchTerm] = useState('');
@@ -308,6 +308,13 @@ export default function CommunityEvents() {
                     'bg-purple-100 text-purple-800'}`}>
                   {event.type}
                 </span>
+                
+                {activeTab === 'meetups' && (
+                    <div className="flex items-center text-sm text-gray-500 bg-gray-50 px-2 py-1 rounded-full">
+                        <Users size={14} className="mr-1" />
+                        {event.attendees?.length || 0} going
+                    </div>
+                )}
               </div>
               
               <h3 className="text-xl font-bold text-gray-900 mb-2">{event.title}</h3>
@@ -331,19 +338,48 @@ export default function CommunityEvents() {
                 {event.description}
               </p>
 
-              {event.contactEmail && (
-                <a 
-                    href={`mailto:${event.contactEmail}`} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className={`flex items-center justify-center gap-2 w-full py-2 rounded-lg transition-colors border ${
-                    activeTab === 'events' 
-                    ? 'border-purple-200 text-purple-700 hover:bg-purple-50' 
-                    : 'border-pink-200 text-pink-700 hover:bg-pink-50'
-                }`}>
-                    <Mail size={16} /> Contact Organizer
-                </a>
-              )}
+              <div className="flex gap-2">
+                  {event.contactEmail && (
+                    <a 
+                        href={`mailto:${event.contactEmail}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg transition-colors border ${
+                        activeTab === 'events' 
+                        ? 'border-purple-200 text-purple-700 hover:bg-purple-50' 
+                        : 'border-pink-200 text-pink-700 hover:bg-pink-50'
+                    }`}>
+                        <Mail size={16} /> Contact
+                    </a>
+                  )}
+
+                  {activeTab === 'meetups' && (
+                      <button
+                        onClick={() => {
+                            if (!currentUser) {
+                                alert("Please login to RSVP");
+                                return;
+                            }
+                            toggleEventAttendance(event.id, currentUser.id);
+                        }}
+                        className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg transition-colors font-medium ${
+                            event.attendees?.includes(currentUser?.id)
+                                ? 'bg-green-100 text-green-700 border border-green-200 hover:bg-green-200'
+                                : 'bg-pink-600 text-white hover:bg-pink-700'
+                        }`}
+                      >
+                        {event.attendees?.includes(currentUser?.id) ? (
+                            <>
+                                <Check size={16} /> I'm Going
+                            </>
+                        ) : (
+                            <>
+                                <UserPlus size={16} /> Join
+                            </>
+                        )}
+                      </button>
+                  )}
+              </div>
             </div>
           </div>
         ))}

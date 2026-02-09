@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MapPin, Calendar, CheckCircle, XCircle, AlertTriangle, Image as ImageIcon, Phone, Mail, Search, Map, List } from 'lucide-react';
+import { MapPin, Calendar, CheckCircle, XCircle, AlertTriangle, Image as ImageIcon, Phone, Mail, Search, Map, List, Filter } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { Link } from 'react-router-dom';
@@ -28,17 +28,31 @@ export default function LostAndFound() {
   });
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState('all');
   const [viewMode, setViewMode] = useState('list'); // 'list' or 'map'
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({
+    status: 'all',
+    gender: 'all',
+    microchipped: 'all'
+  });
 
   const filteredPosts = posts.filter(post => {
-    const matchesType = filterType === 'all' || post.type === filterType;
     const matchesSearch = 
       (post.name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
       (post.breed?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
       (post.location?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
       (post.description?.toLowerCase() || '').includes(searchTerm.toLowerCase());
-    return matchesType && matchesSearch;
+
+    const matchesStatus = filters.status === 'all' 
+        ? true 
+        : filters.status === 'active' 
+            ? post.status !== 'reunited'
+            : post.status === filters.status;
+
+    const matchesGender = filters.gender === 'all' || post.gender === filters.gender;
+    const matchesMicrochip = filters.microchipped === 'all' || post.microchipped === filters.microchipped;
+
+    return matchesSearch && matchesStatus && matchesGender && matchesMicrochip;
   });
 
   const handleSubmit = (e) => {
@@ -265,44 +279,90 @@ export default function LostAndFound() {
       </div>
 
       {/* Search and Filters */}
-      <div className="mb-8 flex flex-col md:flex-row gap-4 items-center">
-        <div className="flex-1 relative w-full">
+      <div className="mb-8 space-y-4">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="relative flex-grow">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
-                type="text"
-                placeholder="Search by name, breed, location..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+              type="text"
+              placeholder="Search by name, breed, location..."
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <div className="absolute left-3 top-2.5 text-gray-400">
-                <Search className="w-5 h-5" />
-            </div>
-        </div>
-        <select
-            className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-        >
-            <option value="all">All Posts</option>
-            <option value="lost">Lost Pets</option>
-            <option value="found">Found Pets</option>
-        </select>
-        
-        {/* View Toggle */}
-        <div className="flex bg-gray-100 p-1 rounded-lg border border-gray-200 shrink-0">
-            <button
+          </div>
+          <div className="flex gap-2">
+            <button 
+                onClick={() => setShowFilters(!showFilters)}
+                className={`flex items-center gap-2 px-4 py-2 border rounded-lg transition-colors ${showFilters ? 'bg-blue-50 border-blue-200 text-blue-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
+            >
+                <Filter size={20} />
+                Filters
+            </button>
+            <div className="flex bg-gray-100 rounded-lg p-1">
+                <button
                 onClick={() => setViewMode('list')}
-                className={`flex items-center px-4 py-2 rounded-md text-sm font-medium transition-all ${viewMode === 'list' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
-            >
-                <List size={16} className="mr-2" /> List
-            </button>
-            <button
+                className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+                title="List View"
+                >
+                <List size={20} />
+                </button>
+                <button
                 onClick={() => setViewMode('map')}
-                className={`flex items-center px-4 py-2 rounded-md text-sm font-medium transition-all ${viewMode === 'map' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
-            >
-                <Map size={16} className="mr-2" /> Map
-            </button>
+                className={`p-2 rounded-md transition-all ${viewMode === 'map' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+                title="Map View"
+                >
+                <Map size={20} />
+                </button>
+            </div>
+          </div>
         </div>
+
+        {/* Filter Panel */}
+        {showFilters && (
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 grid grid-cols-1 sm:grid-cols-3 gap-4 animate-in slide-in-from-top-2">
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <select 
+                        className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                        value={filters.status}
+                        onChange={(e) => setFilters({...filters, status: e.target.value})}
+                    >
+                        <option value="all">All Posts</option>
+                        <option value="active">Active (Lost & Found)</option>
+                        <option value="lost">Lost Only</option>
+                        <option value="found">Found Only</option>
+                        <option value="reunited">Reunited</option>
+                    </select>
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                    <select 
+                        className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                        value={filters.gender}
+                        onChange={(e) => setFilters({...filters, gender: e.target.value})}
+                    >
+                        <option value="all">Any Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="unknown">Unknown</option>
+                    </select>
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Microchipped</label>
+                    <select 
+                        className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                        value={filters.microchipped}
+                        onChange={(e) => setFilters({...filters, microchipped: e.target.value})}
+                    >
+                        <option value="all">Any Status</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                        <option value="unknown">Unknown</option>
+                    </select>
+                </div>
+            </div>
+        )}
       </div>
 
       {/* Listings */}

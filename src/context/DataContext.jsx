@@ -189,6 +189,22 @@ export function DataProvider({ children }) {
     setEvents(events.filter(event => event.id !== id));
   };
 
+  const toggleEventAttendance = (eventId, userId) => {
+    setEvents(events.map(event => {
+        if (event.id === eventId) {
+            const attendees = event.attendees || [];
+            const isAttending = attendees.includes(userId);
+            return {
+                ...event,
+                attendees: isAttending 
+                    ? attendees.filter(id => id !== userId) 
+                    : [...attendees, userId]
+            };
+        }
+        return event;
+    }));
+  };
+
   // --- Rescues & Fosters State ---
   const defaultOrgs = [];
 
@@ -225,6 +241,7 @@ export function DataProvider({ children }) {
     addEvent,
     updateEvent,
     deleteEvent,
+    toggleEventAttendance,
     organizations,
     addOrganization,
     updateOrganization,
