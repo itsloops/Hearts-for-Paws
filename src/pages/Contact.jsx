@@ -49,7 +49,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">Email</h3>
-                  <p className="text-gray-600">info@heartsforpaws.org</p>
+                  <p className="text-gray-600">info@heartsforpaws.net</p>
                   <p className="text-gray-500 text-sm mt-1">We usually reply within 24 hours.</p>
                 </div>
               </div>

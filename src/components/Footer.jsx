@@ -38,7 +38,7 @@ export default function Footer() {
             <ul className="space-y-2 text-gray-400 text-sm">
               <li className="flex items-center">
                 <Mail size={16} className="mr-2" />
-                info@heartsforpaws.org
+                info@heartsforpaws.net
               </li>
               <li className="mt-4">
                 <Link to="/contact" className="text-blue-400 hover:text-blue-300 underline">Send us a message</Link>
