@@ -10,6 +10,11 @@ export default function Home() {
     .filter(post => post.status === 'lost')
     .slice(0, 3);
 
+  // Get success stories (reunited pets)
+  const successStories = posts
+    .filter(post => post.status === 'reunited')
+    .slice(0, 3);
+
   // Get upcoming events (limit 3)
   const upcomingEvents = [...events]
     .sort((a, b) => new Date(a.date) - new Date(b.date))

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Heart, Search, Home, Gift, Calendar, LogIn, LogOut, User } from 'lucide-react';
+import { Heart, Search, Home, Gift, Calendar, LogIn, LogOut, User, Mail } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Navbar() {
@@ -43,6 +43,10 @@ export default function Navbar() {
             <Link to="/events" className="text-gray-600 hover:text-blue-600 flex items-center px-3 py-2 rounded-md text-sm font-medium">
               <Calendar className="w-4 h-4 mr-1" />
               Community
+            </Link>
+            <Link to="/contact" className="text-gray-600 hover:text-blue-600 flex items-center px-3 py-2 rounded-md text-sm font-medium">
+              <Mail className="w-4 h-4 mr-1" />
+              Contact
             </Link>
             
             {currentUser ? (

@@ -13,6 +13,7 @@ import Profile from './pages/Profile';
 import EditPost from './pages/EditPost';
 import EditEvent from './pages/EditEvent';
 import EditOrganization from './pages/EditOrganization';
+import Contact from './pages/Contact';
 import Footer from './components/Footer';
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
                 <Route path="/rescues" element={<RescuesAndFosters />} />
                 <Route path="/donations" element={<Donations />} />
                 <Route path="/events" element={<CommunityEvents />} />
+                <Route path="/contact" element={<Contact />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/profile" element={<Profile />} />

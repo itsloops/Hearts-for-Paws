@@ -32,7 +32,9 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
+            <h3 className="text-lg font-semibold mb-4">
+                <Link to="/contact" className="hover:text-blue-400 transition-colors">Contact Us</Link>
+            </h3>
             <ul className="space-y-2 text-gray-400 text-sm">
               <li className="flex items-center">
                 <Mail size={16} className="mr-2" />
@@ -41,6 +43,9 @@ export default function Footer() {
               <li className="flex items-center">
                 <Phone size={16} className="mr-2" />
                 (555) 123-4567
+              </li>
+              <li className="mt-4">
+                <Link to="/contact" className="text-blue-400 hover:text-blue-300 underline">Send us a message</Link>
               </li>
             </ul>
           </div>
