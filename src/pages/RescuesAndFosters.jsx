@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Phone, Globe, MapPin, Heart, Search, Filter, Home, Plus, Mail } from 'lucide-react';
+import { Phone, Globe, MapPin, Heart, Search, Filter, Home, Plus, Mail, Gift } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import ImageUpload from '../components/ImageUpload';
@@ -246,14 +246,29 @@ export default function RescuesAndFosters() {
                 </div>
               </div>
 
-              <a 
-                href={org.donationLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-md transition-colors"
-              >
-                Donate
-              </a>
+              <div className="space-y-2 mt-4">
+                  {org.donationLink && (
+                    <a 
+                        href={org.donationLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-md transition-colors"
+                    >
+                        Donate
+                    </a>
+                  )}
+                  {org.amazonWishlist && (
+                    <a 
+                        href={org.amazonWishlist}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block w-full text-center bg-yellow-100 hover:bg-yellow-200 text-yellow-800 font-semibold py-2 px-4 rounded-md transition-colors flex items-center justify-center gap-2"
+                    >
+                        <Gift size={16} />
+                        Amazon Wishlist
+                    </a>
+                  )}
+              </div>
             </div>
           </div>
         ))}

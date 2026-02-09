@@ -19,6 +19,7 @@ export default function EditOrganization() {
     website: '',
     address: '',
     donationLink: '',
+    amazonWishlist: '',
     description: '',
     image: ''
   });
@@ -47,6 +48,7 @@ export default function EditOrganization() {
             website: orgToEdit.website,
             address: orgToEdit.address,
             donationLink: orgToEdit.donationLink,
+            amazonWishlist: orgToEdit.amazonWishlist || '',
             description: orgToEdit.description,
             image: orgToEdit.image || ''
         });
@@ -100,6 +102,14 @@ export default function EditOrganization() {
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Address</label>
                     <input required type="text" className="mt-1 block w-full border rounded-md p-2" value={formData.address} onChange={e => setFormData({...formData, address: e.target.value})} />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">Donation Page URL</label>
+                    <input type="url" className="mt-1 block w-full border rounded-md p-2" value={formData.donationLink} onChange={e => setFormData({...formData, donationLink: e.target.value})} />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">Amazon Wishlist URL</label>
+                    <input type="url" className="mt-1 block w-full border rounded-md p-2" value={formData.amazonWishlist} onChange={e => setFormData({...formData, amazonWishlist: e.target.value})} placeholder="https://amazon.com/..." />
                 </div>
             </div>
             <div>

@@ -19,7 +19,7 @@ export default function OrgDashboard() {
   // Forms state
   const [newEvent, setNewEvent] = useState({ title: '', date: '', time: '', location: '', type: 'Adoption Drive', description: '', contactEmail: '' });
   const [newWishlist, setNewWishlist] = useState({ item: '', quantity: '', urgency: 'Medium', description: '' });
-  const [newOrg, setNewOrg] = useState({ name: '', type: 'Shelter', location: '', description: '', email: '', phone: '', website: '' });
+  const [newOrg, setNewOrg] = useState({ name: '', type: 'Shelter', location: '', description: '', email: '', phone: '', website: '', amazonWishlist: '' });
 
   if (!currentUser) return <Navigate to="/login" />;
 
@@ -79,6 +79,16 @@ export default function OrgDashboard() {
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Location</label>
                         <input type="text" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2" value={newOrg.location} onChange={e => setNewOrg({...newOrg, location: e.target.value})} />
+                    </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                         <label className="block text-sm font-medium text-gray-700">Website</label>
+                         <input type="url" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2" value={newOrg.website} onChange={e => setNewOrg({...newOrg, website: e.target.value})} />
+                    </div>
+                    <div>
+                         <label className="block text-sm font-medium text-gray-700">Amazon Wishlist URL</label>
+                         <input type="url" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2" value={newOrg.amazonWishlist} onChange={e => setNewOrg({...newOrg, amazonWishlist: e.target.value})} placeholder="https://amazon.com/..." />
                     </div>
                 </div>
                 <div>

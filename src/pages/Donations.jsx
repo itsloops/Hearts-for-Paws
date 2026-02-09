@@ -5,7 +5,7 @@ import { useData } from '../context/DataContext';
 
 export default function Donations() {
   const { currentUser } = useAuth();
-  const { donationRequests, toggleDonationStatus } = useData();
+  const { donationRequests, toggleDonationStatus, organizations } = useData();
 
   const handleDonate = (id) => {
     if (!currentUser) {
@@ -82,6 +82,17 @@ export default function Donations() {
                   </>
                 )}
               </button>
+              
+              {organizations.find(o => o.id === req.orgId)?.amazonWishlist && (
+                  <a 
+                    href={organizations.find(o => o.id === req.orgId).amazonWishlist}
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="block mt-3 text-center text-xs text-gray-500 hover:text-orange-600 hover:underline flex items-center justify-center gap-1"
+                  >
+                    or view their Amazon Wishlist
+                  </a>
+              )}
             </div>
           </div>
         ))}
