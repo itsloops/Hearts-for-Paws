@@ -107,6 +107,18 @@ export function DataProvider({ children }) {
     }));
   };
 
+  const addDonationRequest = (request) => {
+    setDonationRequests([...donationRequests, request]);
+  };
+
+  const updateDonationRequest = (id, updatedRequest) => {
+    setDonationRequests(donationRequests.map(req => req.id === id ? { ...req, ...updatedRequest } : req));
+  };
+
+  const deleteDonationRequest = (id) => {
+    setDonationRequests(donationRequests.filter(req => req.id !== id));
+  };
+
   // --- Community Events State ---
   const defaultEvents = [
     {
@@ -206,6 +218,9 @@ export function DataProvider({ children }) {
     deletePost,
     donationRequests,
     toggleDonationStatus,
+    addDonationRequest,
+    updateDonationRequest,
+    deleteDonationRequest,
     events,
     addEvent,
     updateEvent,

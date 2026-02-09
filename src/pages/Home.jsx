@@ -65,7 +65,7 @@ export default function Home() {
           {recentLostPets.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {recentLostPets.map(post => (
-                <div key={post.id} className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow">
+                <Link to={`/lost-and-found/${post.id}`} key={post.id} className="block bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow">
                   <div className="h-48 overflow-hidden bg-gray-100 flex items-center justify-center">
                     {post.image ? (
                         <img src={post.image} alt={post.name} className="w-full h-full object-cover" />
@@ -84,7 +84,7 @@ export default function Home() {
                       {post.location}
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           ) : (

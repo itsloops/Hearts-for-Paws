@@ -84,6 +84,12 @@ export default function PetMap({ posts }) {
                             }`}>
                                 {post.status === 'reunited' ? 'Reunited' : post.type}
                             </div>
+                            <Link 
+                                to={`/lost-and-found/${post.id}`}
+                                className="block w-full text-center bg-blue-600 text-white text-sm py-1 rounded hover:bg-blue-700 transition"
+                            >
+                                View Details
+                            </Link>
                         </div>
                     </Popup>
                 </Marker>

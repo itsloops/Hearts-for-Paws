@@ -39,6 +39,12 @@ export default function Profile() {
                 <p className="text-xl font-semibold">{currentUser.name}</p>
                 <p className="text-gray-600">{currentUser.email}</p>
             </div>
+            <div className="ml-auto">
+                <Link to="/org-dashboard" className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition shadow-md">
+                    <Home size={18} />
+                    Manage Organization
+                </Link>
+            </div>
         </div>
       </div>
 
@@ -89,14 +95,22 @@ export default function Profile() {
                                             <><CheckCircle size={16} className="mr-1" /> Mark as Reunited</>
                                         )}
                                     </button>
-                                    <button 
-                                        onClick={() => {
-                                            if(window.confirm('Are you sure you want to delete this report?')) deletePost(post.id);
-                                        }}
-                                        className="text-sm text-red-500 hover:text-red-700 flex items-center ml-auto"
-                                    >
-                                        <Trash2 size={16} className="mr-1" /> Delete
-                                    </button>
+                                    <div className="flex items-center gap-2 ml-auto">
+                                        <Link 
+                                            to={`/edit-post/${post.id}`}
+                                            className="text-sm text-blue-500 hover:text-blue-700 flex items-center"
+                                        >
+                                            <Edit size={16} className="mr-1" /> Edit
+                                        </Link>
+                                        <button 
+                                            onClick={() => {
+                                                if(window.confirm('Are you sure you want to delete this report?')) deletePost(post.id);
+                                            }}
+                                            className="text-sm text-red-500 hover:text-red-700 flex items-center"
+                                        >
+                                            <Trash2 size={16} className="mr-1" /> Delete
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -183,57 +197,7 @@ export default function Profile() {
             )}
         </div>
 
-      {/* My Organizations */}
-      <div className="mt-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">My Organizations</h2>
-            {myOrganizations.length === 0 ? (
-                <p className="text-gray-500 bg-white p-6 rounded-lg shadow">You haven't registered any organizations yet.</p>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {myOrganizations.map(org => (
-                        <div key={org.id} className="bg-white rounded-lg shadow p-4 border-l-4 border-blue-500">
-                            <div className="flex justify-between items-start">
-                                <div className="flex gap-4">
-                                    {org.image ? (
-                                        <img src={org.image} alt={org.name} className="w-16 h-16 object-cover rounded" />
-                                    ) : (
-                                        <div className="w-16 h-16 bg-blue-100 rounded flex items-center justify-center text-blue-500">
-                                            <Home size={24} />
-                                        </div>
-                                    )}
-                                    <div>
-                                        <h3 className="font-bold text-gray-900">{org.name}</h3>
-                                        <span className="text-xs font-semibold px-2 py-1 bg-gray-100 rounded-full text-gray-600">{org.category}</span>
-                                    </div>
-                                </div>
-                                <div className="flex gap-1">
-                                    <Link 
-                                        to={`/edit-org/${org.id}`}
-                                        className="text-blue-500 hover:text-blue-700 p-1"
-                                        title="Edit Organization"
-                                    >
-                                        <Edit size={18} />
-                                    </Link>
-                                    <button 
-                                        onClick={() => {
-                                            if(window.confirm('Are you sure you want to delete this organization?')) deleteOrganization(org.id);
-                                        }}
-                                        className="text-red-500 hover:text-red-700 p-1"
-                                        title="Delete Organization"
-                                    >
-                                        <Trash2 size={18} />
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="mt-2 text-sm text-gray-600 pl-20">
-                                <p>{org.specialty}</p>
-                                <p>{org.location}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
+
     </div>
   );
 }

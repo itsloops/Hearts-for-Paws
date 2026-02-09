@@ -277,16 +277,12 @@ export default function LostAndFound() {
 
               {/* Contact Buttons */}
               <div className="flex gap-2 mt-4">
-                  {post.contactEmail && (
-                      <a 
-                        href={`mailto:${post.contactEmail}`} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-2 bg-blue-50 text-blue-600 py-2 rounded-md hover:bg-blue-100 border border-blue-200 transition-colors"
-                      >
-                          <Mail size={16} /> Email
-                      </a>
-                  )}
+                  <Link 
+                    to={`/lost-and-found/${post.id}`}
+                    className="flex-1 flex items-center justify-center gap-2 bg-gray-100 text-gray-700 py-2 rounded-md hover:bg-gray-200 border border-gray-200 transition-colors text-sm font-medium"
+                  >
+                      View Details
+                  </Link>
                   {post.contactPhone && (
                       <a 
                         href={`tel:${post.contactPhone}`} 

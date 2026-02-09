@@ -14,6 +14,8 @@ import EditPost from './pages/EditPost';
 import EditEvent from './pages/EditEvent';
 import EditOrganization from './pages/EditOrganization';
 import Contact from './pages/Contact';
+import PetDetails from './pages/PetDetails';
+import OrgDashboard from './pages/OrgDashboard';
 import Footer from './components/Footer';
 
 function App() {
@@ -27,6 +29,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/lost-and-found" element={<LostAndFound />} />
+                <Route path="/lost-and-found/:id" element={<PetDetails />} />
                 <Route path="/rescues" element={<RescuesAndFosters />} />
                 <Route path="/donations" element={<Donations />} />
                 <Route path="/events" element={<CommunityEvents />} />
@@ -34,6 +37,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/org-dashboard" element={<OrgDashboard />} />
                 <Route path="/edit-post/:id" element={<EditPost />} />
                 <Route path="/edit-event/:id" element={<EditEvent />} />
                 <Route path="/edit-org/:id" element={<EditOrganization />} />
