@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { MapPin, Calendar, CheckCircle, XCircle, AlertTriangle, Image as ImageIcon, Phone, Mail, Search } from 'lucide-react';
+import { MapPin, Calendar, CheckCircle, XCircle, AlertTriangle, Image as ImageIcon, Phone, Mail, Search, Map, List } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { Link } from 'react-router-dom';
 import ImageUpload from '../components/ImageUpload';
+import PetMap from '../components/PetMap';
 
 export default function LostAndFound() {
   const { currentUser } = useAuth();
@@ -23,6 +24,7 @@ export default function LostAndFound() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
+  const [viewMode, setViewMode] = useState('list'); // 'list' or 'map'
 
   const filteredPosts = posts.filter(post => {
     const matchesType = filterType === 'all' || post.type === filterType;
@@ -183,8 +185,8 @@ export default function LostAndFound() {
       </div>
 
       {/* Search and Filters */}
-      <div className="mb-8 flex flex-col md:flex-row gap-4">
-        <div className="flex-1 relative">
+      <div className="mb-8 flex flex-col md:flex-row gap-4 items-center">
+        <div className="flex-1 relative w-full">
             <input
                 type="text"
                 placeholder="Search by name, breed, location..."
@@ -205,9 +207,28 @@ export default function LostAndFound() {
             <option value="lost">Lost Pets</option>
             <option value="found">Found Pets</option>
         </select>
+        
+        {/* View Toggle */}
+        <div className="flex bg-gray-100 p-1 rounded-lg border border-gray-200 shrink-0">
+            <button
+                onClick={() => setViewMode('list')}
+                className={`flex items-center px-4 py-2 rounded-md text-sm font-medium transition-all ${viewMode === 'list' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+            >
+                <List size={16} className="mr-2" /> List
+            </button>
+            <button
+                onClick={() => setViewMode('map')}
+                className={`flex items-center px-4 py-2 rounded-md text-sm font-medium transition-all ${viewMode === 'map' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+            >
+                <Map size={16} className="mr-2" /> Map
+            </button>
+        </div>
       </div>
 
       {/* Listings */}
+      {viewMode === 'map' ? (
+        <PetMap posts={filteredPosts} />
+      ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredPosts.length === 0 ? (
             <div className="col-span-full text-center py-12 text-gray-500 bg-white rounded-lg border border-dashed border-gray-300">
@@ -306,6 +327,7 @@ export default function LostAndFound() {
         ))
       )}
       </div>
+      )}
     </div>
   );
 }
