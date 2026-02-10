@@ -34,7 +34,7 @@ export default function RescuesAndFosters() {
     image: ''
   });
 
-  const specialties = ['All', ...new Set(organizations.map(r => r.specialty))];
+  const specialties = ['All', ...new Set((organizations || []).map(r => r?.specialty).filter(Boolean))];
   const categories = ['All', 'Rescue', 'Shelter'];
 
   const handleSubmit = (e) => {
@@ -62,10 +62,11 @@ export default function RescuesAndFosters() {
     setShowForm(false);
   };
 
-  const filteredOrgs = organizations.filter(org => {
-    const matchesSearch = org.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          org.specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          org.description.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredOrgs = (organizations || []).filter(org => {
+    if (!org) return false;
+    const matchesSearch = (org.name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) || 
+                          (org.specialty?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+                          (org.description?.toLowerCase() || '').includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || org.category === selectedCategory;
     const matchesBreed = selectedBreed === 'All' || org.specialty === selectedBreed;
 
@@ -80,6 +81,71 @@ export default function RescuesAndFosters() {
           Find local organizations dedicated to helping animals. Filter by breed, type, or search for a specific rescue.
         </p>
       </div>
+
+      {/* Featured Rescue Section */}
+      {rescueOfTheMonth && (
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 p-6 mb-8 rounded-r-lg shadow-sm">
+          <div className="flex flex-col md:flex-row gap-6 items-center">
+            <div className="w-full md:w-1/3">
+              <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden bg-white shadow-inner flex items-center justify-center h-48">
+                {rescueOfTheMonth.image ? (
+                  <img 
+                    src={rescueOfTheMonth.image} 
+                    alt={rescueOfTheMonth.name} 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <Star className="w-16 h-16 text-blue-300" />
+                )}
+              </div>
+            </div>
+            <div className="w-full md:w-2/3">
+              <div className="flex items-center gap-2 text-blue-600 font-bold mb-2 uppercase tracking-wide text-sm">
+                <Star className="w-5 h-5 fill-current" />
+                <span>Rescue of the Month</span>
+              </div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-3">{rescueOfTheMonth.name}</h2>
+              <p className="text-gray-600 mb-4 line-clamp-3 text-lg leading-relaxed">{rescueOfTheMonth.description}</p>
+              
+              <div className="flex flex-wrap gap-4 items-center text-sm text-gray-500 mb-4">
+                 <div className="flex items-center">
+                  <MapPin className="w-4 h-4 mr-1" />
+                  {rescueOfTheMonth.location || rescueOfTheMonth.address}
+                 </div>
+                 {rescueOfTheMonth.specialty && (
+                    <div className="flex items-center">
+                        <Heart className="w-4 h-4 mr-1" />
+                        {rescueOfTheMonth.specialty}
+                    </div>
+                 )}
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                 {rescueOfTheMonth.website && (
+                     <a 
+                     href={rescueOfTheMonth.website}
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     className="inline-flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 font-medium transition-colors shadow-sm"
+                     >
+                     Visit Website <ArrowRight className="w-4 h-4" />
+                     </a>
+                 )}
+                 {rescueOfTheMonth.donationLink && (
+                    <a 
+                        href={rescueOfTheMonth.donationLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 bg-white text-gray-700 border border-gray-300 px-5 py-2 rounded-lg hover:bg-gray-50 font-medium transition-colors"
+                    >
+                        Donate
+                    </a>
+                 )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Action Bar */}
       <div className="bg-white rounded-lg shadow-md p-4 mb-8">
