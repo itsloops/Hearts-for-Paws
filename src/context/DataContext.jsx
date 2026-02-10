@@ -272,7 +272,7 @@ export function DataProvider({ children }) {
     gender: 'Female',
     status: 'Adopted', 
     description: 'Stormi is a calm loving dog who was recently adopted from the Rancho Cucamonga Animal Center in California. She loves her bone, new home, dog cousins and her PAWrents very much.',
-    image: '/images/stormi.jpg',
+    image: '/images/Stormi.JPG',
     goodWithKids: true,
     goodWithDogs: true,
     goodWithCats: true
