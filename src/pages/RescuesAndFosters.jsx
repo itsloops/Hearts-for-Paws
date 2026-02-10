@@ -331,6 +331,13 @@ export default function RescuesAndFosters() {
               </div>
 
               <div className="space-y-2 mt-4">
+                  <Link
+                      to={`/donations?orgId=${org.id}`}
+                      className="block w-full text-center bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold py-2 px-4 rounded-md transition-colors flex items-center justify-center gap-2"
+                  >
+                      <Gift size={16} />
+                      View Wishlist Needs
+                  </Link>
                   {org.donationLink && (
                     <a 
                         href={org.donationLink}

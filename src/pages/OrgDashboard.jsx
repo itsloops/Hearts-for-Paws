@@ -206,14 +206,33 @@ export default function OrgDashboard() {
             <div>
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-xl font-bold">Manage Wishlist</h2>
-                    <button onClick={() => setShowAddWishlist(!showAddWishlist)} className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700">
-                        <Plus size={16} /> Add Item
-                    </button>
+                    <div className="flex gap-2">
+                        <button 
+                            onClick={() => {
+                                setNewWishlist(prev => ({ ...prev, urgency: 'Critical' }));
+                                setShowAddWishlist(true);
+                            }} 
+                            className="bg-red-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-red-700 shadow-sm transition-colors"
+                        >
+                            <AlertCircle size={16} /> Add Dire Need
+                        </button>
+                        <button 
+                            onClick={() => {
+                                setNewWishlist(prev => ({ ...prev, urgency: 'Medium' }));
+                                setShowAddWishlist(!showAddWishlist);
+                            }} 
+                            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 shadow-sm transition-colors"
+                        >
+                            <Plus size={16} /> Add Item
+                        </button>
+                    </div>
                 </div>
 
                 {showAddWishlist && (
-                    <div className="bg-gray-50 p-6 rounded-lg mb-8 border border-gray-200">
-                        <h3 className="font-bold mb-4">Request Item</h3>
+                    <div className={`p-6 rounded-lg mb-8 border ${newWishlist.urgency === 'Critical' ? 'bg-red-50 border-red-200' : 'bg-gray-50 border-gray-200'}`}>
+                        <h3 className={`font-bold mb-4 ${newWishlist.urgency === 'Critical' ? 'text-red-800' : 'text-gray-900'}`}>
+                            {newWishlist.urgency === 'Critical' ? 'Request Critical Item' : 'Request Item'}
+                        </h3>
                         <form onSubmit={handleCreateWishlist} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <input type="text" placeholder="Item Name (e.g. Puppy Food)" required className="p-2 border rounded" value={newWishlist.item} onChange={e => setNewWishlist({...newWishlist, item: e.target.value})} />
                             <input type="text" placeholder="Quantity (e.g. 5 bags)" required className="p-2 border rounded" value={newWishlist.quantity} onChange={e => setNewWishlist({...newWishlist, quantity: e.target.value})} />
@@ -226,7 +245,9 @@ export default function OrgDashboard() {
                             <input type="text" placeholder="Description (optional)" className="p-2 border rounded" value={newWishlist.description} onChange={e => setNewWishlist({...newWishlist, description: e.target.value})} />
                             <div className="md:col-span-2 flex justify-end gap-2">
                                 <button type="button" onClick={() => setShowAddWishlist(false)} className="px-4 py-2 text-gray-600">Cancel</button>
-                                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Add to Wishlist</button>
+                                <button type="submit" className={`px-4 py-2 text-white rounded shadow-sm ${newWishlist.urgency === 'Critical' ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'}`}>
+                                    {newWishlist.urgency === 'Critical' ? 'Post Urgent Request' : 'Add to Wishlist'}
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -234,13 +255,18 @@ export default function OrgDashboard() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {myWishlist.map(item => (
-                        <div key={item.id} className={`bg-white p-4 rounded-lg shadow border-l-4 ${item.fulfilled ? 'border-green-500' : 'border-blue-500'}`}>
+                        <div key={item.id} className={`bg-white p-4 rounded-lg shadow border-l-4 ${item.fulfilled ? 'border-green-500' : item.urgency === 'Critical' ? 'border-red-600' : 'border-blue-500'}`}>
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <h3 className="font-bold">{item.item}</h3>
+                                    <h3 className="font-bold flex items-center gap-2">
+                                        {item.item}
+                                        {item.urgency === 'Critical' && !item.fulfilled && (
+                                            <span className="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full animate-pulse">Critical</span>
+                                        )}
+                                    </h3>
                                     <p className="text-sm text-gray-600">{item.quantity} • {item.urgency} Priority</p>
                                 </div>
-                                <button onClick={() => deleteDonationRequest(item.id)} className="text-red-500 hover:text-red-700"><Trash2 size={16} /></button>
+                                <button onClick={() => deleteDonationRequest(item.id)} className="text-red-500 hover:text-red-700 p-2"><Trash2 size={16} /></button>
                             </div>
                             {item.fulfilled && (
                                 <div className="mt-2 bg-green-50 text-green-700 text-xs font-bold px-2 py-1 rounded inline-flex items-center">
