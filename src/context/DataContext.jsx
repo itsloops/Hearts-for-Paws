@@ -260,6 +260,15 @@ export function DataProvider({ children }) {
     localStorage.setItem('hfp_adoptable_pets', JSON.stringify(adoptablePets));
   }, [adoptablePets]);
 
+  // --- Pet of the Month State ---
+  const [petOfTheMonthId, setPetOfTheMonthId] = useState(() => loadState('hfp_pet_of_month_id', null));
+
+  useEffect(() => {
+    if (petOfTheMonthId) {
+        localStorage.setItem('hfp_pet_of_month_id', JSON.stringify(petOfTheMonthId));
+    }
+  }, [petOfTheMonthId]);
+
   // --- Messaging State ---
   const defaultMessages = [];
 
@@ -294,6 +303,7 @@ export function DataProvider({ children }) {
       events, addEvent, updateEvent, deleteEvent, toggleEventAttendance,
       organizations, addOrganization, updateOrganization, deleteOrganization,
       adoptablePets, setAdoptablePets,
+      petOfTheMonthId, setPetOfTheMonthId,
       messages, sendMessage, markMessageAsRead, getMessagesForUser
     }}>
       {children}

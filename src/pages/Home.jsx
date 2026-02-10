@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
-import { MapPin, Calendar, ArrowRight, Heart, AlertCircle, Home as HomeIcon, Image as ImageIcon, Users, Gift, Star, CheckCircle } from 'lucide-react';
+import { MapPin, Calendar, ArrowRight, Heart, AlertCircle, Home as HomeIcon, Image as ImageIcon, Users, Gift, Star, CheckCircle, Edit2, X } from 'lucide-react';
 
 export default function Home() {
-  const { posts, events, organizations, adoptablePets } = useData();
+  const { posts, events, organizations, adoptablePets, petOfTheMonthId, setPetOfTheMonthId } = useData();
+  const [isEditingPet, setIsEditingPet] = useState(false);
 
   const meetupTypes = ['Social Meetup', 'Walking Group'];
 
@@ -13,10 +15,16 @@ export default function Home() {
     ? organizations[currentMonthIndex % organizations.length] 
     : null;
 
-  // Calculate "Pet of the Month" deterministically
-  const petOfTheMonth = adoptablePets && adoptablePets.length > 0
-    ? adoptablePets[currentMonthIndex % adoptablePets.length]
-    : null;
+  // Determine "Pet of the Month"
+  let petOfTheMonth = null;
+  if (petOfTheMonthId) {
+    petOfTheMonth = adoptablePets.find(p => p.id === petOfTheMonthId);
+  }
+  
+  // Fallback if not set or not found
+  if (!petOfTheMonth && adoptablePets && adoptablePets.length > 0) {
+    petOfTheMonth = adoptablePets[currentMonthIndex % adoptablePets.length];
+  }
 
   // Get recent active lost pets (limit 3)
   const recentLostPets = posts
@@ -142,6 +150,47 @@ export default function Home() {
               <Heart className="fill-current text-pink-300" size={20} />
               Pet of the Month
             </div>
+
+            {/* Edit Button */}
+            <button 
+                onClick={() => setIsEditingPet(!isEditingPet)}
+                className="absolute top-4 right-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm p-2 rounded-full text-white transition z-20"
+                title="Change Pet of the Month"
+            >
+                {isEditingPet ? <X size={20} /> : <Edit2 size={20} />}
+            </button>
+            
+            {/* Selection Interface */}
+            {isEditingPet && (
+                <div className="absolute top-16 right-4 w-64 bg-white rounded-xl shadow-2xl p-4 z-30 text-gray-900 animate-in fade-in zoom-in-95 duration-200">
+                    <h3 className="font-bold text-gray-800 mb-3 text-sm uppercase tracking-wide">Select Featured Pet</h3>
+                    <div className="max-h-60 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+                        {adoptablePets.map(pet => (
+                            <button
+                                key={pet.id}
+                                onClick={() => {
+                                    setPetOfTheMonthId(pet.id);
+                                    setIsEditingPet(false);
+                                }}
+                                className={`w-full text-left p-2 rounded-lg flex items-center gap-3 transition ${pet.id === petOfTheMonth.id ? 'bg-indigo-50 border border-indigo-200' : 'hover:bg-gray-50 border border-transparent'}`}
+                            >
+                                {pet.image ? (
+                                    <img src={pet.image} alt={pet.name} className="w-8 h-8 rounded-full object-cover" />
+                                ) : (
+                                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                                        <ImageIcon size={14} className="text-gray-400" />
+                                    </div>
+                                )}
+                                <div>
+                                    <div className="font-bold text-sm">{pet.name}</div>
+                                    <div className="text-xs text-gray-500">{pet.breed}</div>
+                                </div>
+                                {pet.id === petOfTheMonth.id && <CheckCircle size={16} className="text-indigo-600 ml-auto" />}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
             
             <div className="flex flex-col md:flex-row-reverse">
               <div className="md:w-1/3 h-64 md:h-auto relative bg-gray-900/20 flex items-center justify-center overflow-hidden">
