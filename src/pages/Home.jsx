@@ -300,7 +300,14 @@ export default function Home() {
                                 className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
                                 value={editForm.status}
                                 onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
+                                list="status-options"
                             />
+                            <datalist id="status-options">
+                                <option value="Available for Adoption" />
+                                <option value="Adopted" />
+                                <option value="In Foster Care" />
+                                <option value="Pending" />
+                            </datalist>
                         </div>
 
                         <div>
@@ -409,7 +416,7 @@ export default function Home() {
                      to="/rescues" 
                      className="bg-white text-indigo-600 px-8 py-3 rounded-full font-bold hover:bg-indigo-50 transition shadow-lg flex items-center gap-2"
                    >
-                     Adopt {petOfTheMonth.name}
+                     {petOfTheMonth.status?.toLowerCase().includes('adopted') ? 'View Profile' : `Adopt ${petOfTheMonth.name}`}
                      <ArrowRight size={18} />
                    </Link>
                 </div>
