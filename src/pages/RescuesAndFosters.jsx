@@ -23,6 +23,7 @@ export default function RescuesAndFosters() {
 
   // Registration Form State
   const [showForm, setShowForm] = useState(false);
+  const [isManualEntry, setIsManualEntry] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     category: 'Rescue',
@@ -41,12 +42,12 @@ export default function RescuesAndFosters() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!currentUser) return;
+    if (!currentUser && !isManualEntry) return;
     
     const newOrg = {
         id: Date.now(),
         ...formData,
-        userId: currentUser.id
+        userId: isManualEntry ? `manual_${Date.now()}` : currentUser.id
     };
     addOrganization(newOrg);
     setFormData({
@@ -62,6 +63,7 @@ export default function RescuesAndFosters() {
         image: ''
     });
     setShowForm(false);
+    setIsManualEntry(false);
   };
 
   const filteredOrgs = (organizations || []).filter(org => {
@@ -194,13 +196,26 @@ export default function RescuesAndFosters() {
             </div>
             {currentUser && !myOrg && (
                 <button 
-                    onClick={() => setShowForm(!showForm)}
+                    onClick={() => {
+                        setIsManualEntry(false);
+                        setShowForm(!showForm);
+                    }}
                     className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 whitespace-nowrap"
                 >
                     <Plus size={20} />
                     Register Org
                 </button>
             )}
+            <button 
+                onClick={() => {
+                    setIsManualEntry(true);
+                    setShowForm(true);
+                }}
+                className="flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 whitespace-nowrap"
+            >
+                <Plus size={20} />
+                Add Manual Listing
+            </button>
             {myOrg && (
                 <Link 
                     to="/org-dashboard?tab=wishlist"
@@ -216,7 +231,7 @@ export default function RescuesAndFosters() {
       {/* Registration Form */}
       {showForm && (
         <div className="bg-white rounded-lg shadow-md p-6 mb-8 border-t-4 border-blue-500 animate-fade-in">
-            <h2 className="text-xl font-semibold mb-4">Register an Organization</h2>
+            <h2 className="text-xl font-semibold mb-4">{isManualEntry ? 'Add New Listing (Manual)' : 'Register an Organization'}</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -264,7 +279,9 @@ export default function RescuesAndFosters() {
 
                 <div className="flex justify-end gap-4">
                     <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
-                    <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Register Organization</button>
+                    <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                        {isManualEntry ? 'Add Listing' : 'Register Organization'}
+                    </button>
                 </div>
             </form>
         </div>
