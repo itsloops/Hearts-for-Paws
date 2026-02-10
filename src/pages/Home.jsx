@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
-import { MapPin, Calendar, ArrowRight, Heart, AlertCircle, Home as HomeIcon, Image as ImageIcon, Users, Gift, Star, CheckCircle, Edit2, X } from 'lucide-react';
+import ImageUpload from '../components/ImageUpload';
+import { MapPin, Calendar, ArrowRight, Heart, AlertCircle, Home as HomeIcon, Image as ImageIcon, Users, Gift, Star, CheckCircle, Edit2, X, Save } from 'lucide-react';
 
 export default function Home() {
-  const { posts, events, organizations, adoptablePets, petOfTheMonthId, setPetOfTheMonthId } = useData();
+  const { posts, events, organizations, adoptablePets, petOfTheMonthData, setPetOfTheMonthData } = useData();
   const [isEditingPet, setIsEditingPet] = useState(false);
+  const [editForm, setEditForm] = useState(null);
 
   const meetupTypes = ['Social Meetup', 'Walking Group'];
 
@@ -16,15 +18,56 @@ export default function Home() {
     : null;
 
   // Determine "Pet of the Month"
-  let petOfTheMonth = null;
-  if (petOfTheMonthId) {
-    petOfTheMonth = adoptablePets.find(p => p.id === petOfTheMonthId);
-  }
+  // If custom data exists, use it. Otherwise, use deterministic fallback.
+  let petOfTheMonth = petOfTheMonthData;
   
-  // Fallback if not set or not found
+  // Fallback if not set
   if (!petOfTheMonth && adoptablePets && adoptablePets.length > 0) {
     petOfTheMonth = adoptablePets[currentMonthIndex % adoptablePets.length];
   }
+
+  // Initialize form when opening edit mode
+  useEffect(() => {
+    if (isEditingPet && petOfTheMonth) {
+        setEditForm({
+            name: petOfTheMonth.name || '',
+            breed: petOfTheMonth.breed || '',
+            age: petOfTheMonth.age || '',
+            gender: petOfTheMonth.gender || 'Unknown',
+            status: petOfTheMonth.status || 'Available for Adoption',
+            description: petOfTheMonth.description || '',
+            image: petOfTheMonth.image || '',
+            goodWithKids: petOfTheMonth.goodWithKids || false,
+            goodWithDogs: petOfTheMonth.goodWithDogs || false,
+            goodWithCats: petOfTheMonth.goodWithCats || false
+        });
+    }
+  }, [isEditingPet, petOfTheMonth]);
+
+  const handleSavePetOfTheMonth = (e) => {
+      e.preventDefault();
+      // Save the custom data
+      setPetOfTheMonthData({
+          ...editForm,
+          id: 'custom-' + Date.now() // Give it a unique ID if it's new
+      });
+      setIsEditingPet(false);
+  };
+
+  const handleSelectExistingPet = (pet) => {
+      setEditForm({
+          name: pet.name,
+          breed: pet.breed,
+          age: pet.age,
+          gender: pet.gender,
+          status: pet.status,
+          description: pet.description,
+          image: pet.image,
+          goodWithKids: pet.goodWithKids,
+          goodWithDogs: pet.goodWithDogs,
+          goodWithCats: pet.goodWithCats
+      });
+  };
 
   // Get recent active lost pets (limit 3)
   const recentLostPets = posts
@@ -161,34 +204,151 @@ export default function Home() {
             </button>
             
             {/* Selection Interface */}
-            {isEditingPet && (
-                <div className="absolute top-16 right-4 w-64 bg-white rounded-xl shadow-2xl p-4 z-30 text-gray-900 animate-in fade-in zoom-in-95 duration-200">
-                    <h3 className="font-bold text-gray-800 mb-3 text-sm uppercase tracking-wide">Select Featured Pet</h3>
-                    <div className="max-h-60 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
-                        {adoptablePets.map(pet => (
-                            <button
-                                key={pet.id}
-                                onClick={() => {
-                                    setPetOfTheMonthId(pet.id);
-                                    setIsEditingPet(false);
-                                }}
-                                className={`w-full text-left p-2 rounded-lg flex items-center gap-3 transition ${pet.id === petOfTheMonth.id ? 'bg-indigo-50 border border-indigo-200' : 'hover:bg-gray-50 border border-transparent'}`}
-                            >
-                                {pet.image ? (
-                                    <img src={pet.image} alt={pet.name} className="w-8 h-8 rounded-full object-cover" />
-                                ) : (
-                                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                                        <ImageIcon size={14} className="text-gray-400" />
-                                    </div>
-                                )}
-                                <div>
-                                    <div className="font-bold text-sm">{pet.name}</div>
-                                    <div className="text-xs text-gray-500">{pet.breed}</div>
-                                </div>
-                                {pet.id === petOfTheMonth.id && <CheckCircle size={16} className="text-indigo-600 ml-auto" />}
-                            </button>
-                        ))}
+            {isEditingPet && editForm && (
+                <div className="absolute top-16 right-4 w-96 bg-white rounded-xl shadow-2xl p-6 z-30 text-gray-900 animate-in fade-in zoom-in-95 duration-200 max-h-[80vh] overflow-y-auto">
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="font-bold text-gray-800 text-lg">Edit Pet of the Month</h3>
+                        <button onClick={() => setIsEditingPet(false)} className="text-gray-400 hover:text-gray-600">
+                            <X size={20} />
+                        </button>
                     </div>
+
+                    <div className="mb-6 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                         <span className="text-xs font-bold text-gray-500 uppercase block mb-2">Quick Select from List</span>
+                         <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+                             {adoptablePets.map(pet => (
+                                 <button
+                                     key={pet.id}
+                                     type="button"
+                                     onClick={() => handleSelectExistingPet(pet)}
+                                     className="flex-shrink-0 bg-white border border-gray-200 hover:border-indigo-300 rounded-md p-1.5 flex flex-col items-center w-20 transition-all text-center"
+                                 >
+                                     {pet.image ? (
+                                         <img src={pet.image} alt={pet.name} className="w-8 h-8 rounded-full object-cover mb-1" />
+                                     ) : (
+                                         <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center mb-1">
+                                             <ImageIcon size={12} className="text-gray-400" />
+                                         </div>
+                                     )}
+                                     <span className="text-xs font-medium truncate w-full">{pet.name}</span>
+                                 </button>
+                             ))}
+                         </div>
+                    </div>
+
+                    <form onSubmit={handleSavePetOfTheMonth} className="space-y-4">
+                        <div>
+                             <ImageUpload 
+                                 onImageSelect={(base64) => setEditForm({ ...editForm, image: base64 })}
+                                 currentImage={editForm.image}
+                                 label="Pet Photo"
+                             />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3">
+                            <div>
+                                <label className="block text-xs font-bold text-gray-700 mb-1">Name</label>
+                                <input 
+                                    type="text" 
+                                    className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
+                                    value={editForm.name}
+                                    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-gray-700 mb-1">Breed</label>
+                                <input 
+                                    type="text" 
+                                    className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
+                                    value={editForm.breed}
+                                    onChange={(e) => setEditForm({ ...editForm, breed: e.target.value })}
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3">
+                            <div>
+                                <label className="block text-xs font-bold text-gray-700 mb-1">Age</label>
+                                <input 
+                                    type="text" 
+                                    className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
+                                    value={editForm.age}
+                                    onChange={(e) => setEditForm({ ...editForm, age: e.target.value })}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-gray-700 mb-1">Gender</label>
+                                <select 
+                                    className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
+                                    value={editForm.gender}
+                                    onChange={(e) => setEditForm({ ...editForm, gender: e.target.value })}
+                                >
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Unknown">Unknown</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-xs font-bold text-gray-700 mb-1">Status</label>
+                            <input 
+                                type="text" 
+                                className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
+                                value={editForm.status}
+                                onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-xs font-bold text-gray-700 mb-1">Description</label>
+                            <textarea 
+                                className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
+                                rows="3"
+                                value={editForm.description}
+                                onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                                required
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="block text-xs font-bold text-gray-700">Good With...</label>
+                            <div className="flex gap-4">
+                                <label className="inline-flex items-center">
+                                    <input type="checkbox" className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
+                                        checked={editForm.goodWithKids}
+                                        onChange={(e) => setEditForm({ ...editForm, goodWithKids: e.target.checked })}
+                                    />
+                                    <span className="ml-2 text-sm text-gray-600">Kids</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input type="checkbox" className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
+                                        checked={editForm.goodWithDogs}
+                                        onChange={(e) => setEditForm({ ...editForm, goodWithDogs: e.target.checked })}
+                                    />
+                                    <span className="ml-2 text-sm text-gray-600">Dogs</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input type="checkbox" className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
+                                        checked={editForm.goodWithCats}
+                                        onChange={(e) => setEditForm({ ...editForm, goodWithCats: e.target.checked })}
+                                    />
+                                    <span className="ml-2 text-sm text-gray-600">Cats</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button 
+                            type="submit" 
+                            className="w-full bg-indigo-600 text-white font-bold py-2 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2"
+                        >
+                            <Save size={18} />
+                            Save Changes
+                        </button>
+                    </form>
                 </div>
             )}
             
