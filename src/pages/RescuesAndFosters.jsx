@@ -13,6 +13,8 @@ export default function RescuesAndFosters() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedBreed, setSelectedBreed] = useState('All');
   
+  const myOrg = organizations.find(o => o.userId === currentUser?.id);
+  
   // Rescue of the Month Logic
   const currentMonthIndex = new Date().getMonth();
   const rescueOfTheMonth = organizations.length > 0 
@@ -190,7 +192,7 @@ export default function RescuesAndFosters() {
                     </div>
                 </div>
             </div>
-            {currentUser && (
+            {currentUser && !myOrg && (
                 <button 
                     onClick={() => setShowForm(!showForm)}
                     className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 whitespace-nowrap"
@@ -198,6 +200,15 @@ export default function RescuesAndFosters() {
                     <Plus size={20} />
                     Register Org
                 </button>
+            )}
+            {myOrg && (
+                <Link 
+                    to="/org-dashboard?tab=wishlist"
+                    className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 whitespace-nowrap shadow-md"
+                >
+                    <Gift size={20} />
+                    Manage Wishlist
+                </Link>
             )}
         </div>
       </div>

@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 import { Building2, Calendar, Gift, Plus, Trash2, Edit, AlertCircle, CheckCircle } from 'lucide-react';
 
 export default function OrgDashboard() {
@@ -11,8 +11,17 @@ export default function OrgDashboard() {
     events, addEvent, deleteEvent,
     donationRequests, addDonationRequest, deleteDonationRequest
   } = useData();
+  const location = useLocation();
 
   const [activeTab, setActiveTab] = useState('overview');
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tab = params.get('tab');
+    if (tab) {
+        setActiveTab(tab);
+    }
+  }, [location]);
   const [showAddEvent, setShowAddEvent] = useState(false);
   const [showAddWishlist, setShowAddWishlist] = useState(false);
 
