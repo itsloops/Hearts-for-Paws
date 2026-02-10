@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
-import { MapPin, Calendar, ArrowRight, Heart, AlertCircle, Home as HomeIcon, Image as ImageIcon, Users, Gift, Star } from 'lucide-react';
+import { MapPin, Calendar, ArrowRight, Heart, AlertCircle, Home as HomeIcon, Image as ImageIcon, Users, Gift, Star, CheckCircle } from 'lucide-react';
 
 export default function Home() {
-  const { posts, events, organizations } = useData();
+  const { posts, events, organizations, adoptablePets } = useData();
 
   const meetupTypes = ['Social Meetup', 'Walking Group'];
 
@@ -11,6 +11,11 @@ export default function Home() {
   const currentMonthIndex = new Date().getMonth();
   const rescueOfTheMonth = organizations.length > 0 
     ? organizations[currentMonthIndex % organizations.length] 
+    : null;
+
+  // Calculate "Pet of the Month" deterministically
+  const petOfTheMonth = adoptablePets && adoptablePets.length > 0
+    ? adoptablePets[currentMonthIndex % adoptablePets.length]
     : null;
 
   // Get recent active lost pets (limit 3)
@@ -124,6 +129,80 @@ export default function Home() {
                        Send a Gift
                      </a>
                    )}
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Pet of the Month - Featured Section */}
+        {petOfTheMonth && (
+          <section className="mb-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-xl overflow-hidden text-white relative">
+            <div className="absolute top-0 left-0 bg-white/20 backdrop-blur-sm px-6 py-2 rounded-br-2xl font-bold flex items-center gap-2 shadow-sm z-10 border-b border-r border-white/10">
+              <Heart className="fill-current text-pink-300" size={20} />
+              Pet of the Month
+            </div>
+            
+            <div className="flex flex-col md:flex-row-reverse">
+              <div className="md:w-1/3 h-64 md:h-auto relative bg-gray-900/20 flex items-center justify-center overflow-hidden">
+                {petOfTheMonth.image ? (
+                  <img src={petOfTheMonth.image} alt={petOfTheMonth.name} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="flex flex-col items-center text-white/50">
+                    <ImageIcon size={64} />
+                    <span className="text-sm mt-2 font-medium">No Photo Available</span>
+                  </div>
+                )}
+                <div className="absolute bottom-4 right-4 bg-white/90 text-indigo-900 px-3 py-1 rounded-full text-xs font-bold uppercase shadow-sm">
+                  {petOfTheMonth.status}
+                </div>
+              </div>
+              
+              <div className="p-8 md:w-2/3 flex flex-col justify-center">
+                <div className="flex items-center gap-2 text-indigo-200 font-bold uppercase tracking-wider text-sm mb-2">
+                  <Star size={16} />
+                  Looking for a Home
+                </div>
+                
+                <h2 className="text-4xl font-bold mb-2">{petOfTheMonth.name}</h2>
+                <div className="flex flex-wrap items-center gap-4 text-indigo-100 mb-6 text-sm font-medium">
+                  <span>{petOfTheMonth.breed}</span>
+                  <span>•</span>
+                  <span>{petOfTheMonth.age}</span>
+                  <span>•</span>
+                  <span>{petOfTheMonth.gender}</span>
+                </div>
+                
+                <p className="text-indigo-50 mb-8 text-lg leading-relaxed max-w-2xl">
+                  "{petOfTheMonth.description}"
+                </p>
+
+                <div className="flex flex-wrap gap-3 mb-8">
+                    {petOfTheMonth.goodWithKids && (
+                        <span className="bg-white/10 px-3 py-1 rounded-full text-sm flex items-center gap-1">
+                            <CheckCircle size={14} className="text-green-300" /> Good with Kids
+                        </span>
+                    )}
+                    {petOfTheMonth.goodWithDogs && (
+                        <span className="bg-white/10 px-3 py-1 rounded-full text-sm flex items-center gap-1">
+                            <CheckCircle size={14} className="text-green-300" /> Good with Dogs
+                        </span>
+                    )}
+                    {petOfTheMonth.goodWithCats && (
+                        <span className="bg-white/10 px-3 py-1 rounded-full text-sm flex items-center gap-1">
+                            <CheckCircle size={14} className="text-green-300" /> Good with Cats
+                        </span>
+                    )}
+                </div>
+                
+                <div className="flex flex-wrap gap-4">
+                   <Link 
+                     to="/rescues" 
+                     className="bg-white text-indigo-600 px-8 py-3 rounded-full font-bold hover:bg-indigo-50 transition shadow-lg flex items-center gap-2"
+                   >
+                     Adopt {petOfTheMonth.name}
+                     <ArrowRight size={18} />
+                   </Link>
                 </div>
               </div>
             </div>

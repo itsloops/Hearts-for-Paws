@@ -22,35 +22,7 @@ export function DataProvider({ children }) {
   };
 
   // --- Lost & Found State ---
-  const defaultPosts = [
-    {
-      id: 1,
-      type: 'lost',
-      name: 'Buddy',
-      breed: 'Golden Retriever',
-      location: 'Central Park',
-      date: '2023-10-25',
-      description: 'Wearing a red collar. Needs daily medication for allergies. Very friendly.',
-      image: null,
-      status: 'lost',
-      userId: '123', // Demo user ID
-      contactEmail: 'owner@example.com',
-      contactPhone: '555-0101'
-    },
-    {
-      id: 2,
-      type: 'found',
-      name: 'Unknown',
-      breed: 'Siamese Cat',
-      location: 'Downtown',
-      date: '2023-10-26',
-      image: null,
-      status: 'found',
-      userId: '999', // Another user
-      contactEmail: 'finder@example.com',
-      contactPhone: '555-0102'
-    }
-  ];
+  const defaultPosts = [];
 
   const [posts, setPosts] = useState(() => loadState('hfp_posts_live', defaultPosts));
 
@@ -236,19 +208,60 @@ export function DataProvider({ children }) {
     setOrganizations(organizations.filter(org => org.id !== id));
   };
 
-  // --- Messaging State ---
-  const defaultMessages = [
+  // --- Adoptable Pets State (New) ---
+  const defaultAdoptablePets = [
     {
-      id: 1,
-      fromUserId: '999',
-      toUserId: '123',
-      senderName: 'Jane Doe',
-      subject: 'Found your dog Buddy',
-      content: 'Hi! I think I saw Buddy near the park entrance this morning. He looked safe but scared.',
-      date: '2023-10-26T10:30:00',
-      read: false
+      id: 'pet1',
+      name: 'Luna',
+      breed: 'Labrador Mix',
+      age: '2 years',
+      gender: 'Female',
+      status: 'Available for Adoption', 
+      description: 'Luna is a sweet, energetic girl who loves fetch and belly rubs. She is great with kids and other dogs.',
+      image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=1000',
+      organizationId: 'org1',
+      goodWithKids: true,
+      goodWithDogs: true,
+      goodWithCats: false
+    },
+    {
+      id: 'pet2',
+      name: 'Oliver',
+      breed: 'Tabby Cat',
+      age: '4 years',
+      gender: 'Male',
+      status: 'In Foster Care',
+      description: 'Oliver is a chill lap cat who loves sunbathing. Currently in a foster home and ready for his forever family.',
+      image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=1000',
+      organizationId: 'org1',
+      goodWithKids: true,
+      goodWithDogs: false,
+      goodWithCats: true
+    },
+    {
+      id: 'pet3',
+      name: 'Max',
+      breed: 'Golden Retriever',
+      age: '5 years',
+      gender: 'Male',
+      status: 'Available for Adoption',
+      description: 'Max is the perfect family dog. He is gentle, well-trained, and loves everyone he meets.',
+      image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=1000',
+      organizationId: 'org1',
+      goodWithKids: true,
+      goodWithDogs: true,
+      goodWithCats: true
     }
   ];
+
+  const [adoptablePets, setAdoptablePets] = useState(() => loadState('hfp_adoptable_pets', defaultAdoptablePets));
+
+  useEffect(() => {
+    localStorage.setItem('hfp_adoptable_pets', JSON.stringify(adoptablePets));
+  }, [adoptablePets]);
+
+  // --- Messaging State ---
+  const defaultMessages = [];
 
   const [messages, setMessages] = useState(() => loadState('hfp_messages', defaultMessages));
 
@@ -280,6 +293,7 @@ export function DataProvider({ children }) {
       donationRequests, toggleDonationStatus, addDonationRequest, updateDonationRequest, deleteDonationRequest,
       events, addEvent, updateEvent, deleteEvent, toggleEventAttendance,
       organizations, addOrganization, updateOrganization, deleteOrganization,
+      adoptablePets, setAdoptablePets,
       messages, sendMessage, markMessageAsRead, getMessagesForUser
     }}>
       {children}
