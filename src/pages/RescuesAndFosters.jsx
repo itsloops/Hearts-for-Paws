@@ -155,15 +155,23 @@ export default function RescuesAndFosters() {
       <div className="bg-white rounded-lg shadow-md p-4 mb-8">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             <div className="flex-1 w-full flex flex-col md:flex-row gap-4">
-                <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input
-                    type="text"
-                    placeholder="Search rescues, breeds, or locations..."
-                    className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    />
+                <div className="relative flex-1 flex gap-2">
+                    <div className="relative flex-1">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                        <input
+                        type="text"
+                        placeholder="Search rescues, breeds, or locations..."
+                        className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                    <button 
+                        className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm"
+                        onClick={() => {}} // Search happens automatically, this is for visual affordance
+                    >
+                        Search
+                    </button>
                 </div>
                 
                 <div className="flex gap-4 w-full md:w-auto">
