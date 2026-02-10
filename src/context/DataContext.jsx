@@ -266,16 +266,16 @@ export function DataProvider({ children }) {
   // Edit the object below to change the global "Pet of the Month".
   const defaultPetOfTheMonth = {
     id: 'default-pom',
-    name: 'Luna',
-    breed: 'Labrador Mix',
-    age: '2 years',
+    name: 'Stormi',
+    breed: 'Weimaraner Mix',
+    age: '1 year',
     gender: 'Female',
-    status: 'Available for Adoption', 
-    description: 'Luna is our featured pet! She is a sweet, energetic girl who loves fetch and belly rubs. She is great with kids and other dogs.',
-    image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=1000',
+    status: 'Adopted', 
+    description: 'Stormi is a calm loving dog who was recently adopted from the Rancho Cucamonga Animal Center in California. She loves her bone, new home, dog cousins and her PAWrents very much.',
+    image: '/images/stormi.jpg',
     goodWithKids: true,
     goodWithDogs: true,
-    goodWithCats: false
+    goodWithCats: true
   };
 
   const [petOfTheMonthData, setPetOfTheMonthData] = useState(() => loadState('hfp_pet_of_month_data', defaultPetOfTheMonth));
