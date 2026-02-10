@@ -128,9 +128,9 @@ export default function Donations() {
                     )}
                 </button>
                 
-                {organizations.find(o => o.id === req.orgId)?.amazonWishlist && (
+                {organizations.find(o => String(o.id) === String(req.orgId))?.amazonWishlist && (
                     <a 
-                        href={organizations.find(o => o.id === req.orgId).amazonWishlist}
+                        href={organizations.find(o => String(o.id) === String(req.orgId)).amazonWishlist}
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="block mt-3 text-center text-xs text-gray-500 hover:text-orange-600 hover:underline flex items-center justify-center gap-1"
