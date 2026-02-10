@@ -262,7 +262,23 @@ export function DataProvider({ children }) {
 
   // --- Pet of the Month State ---
   // Store the full object to allow custom edits
-  const [petOfTheMonthData, setPetOfTheMonthData] = useState(() => loadState('hfp_pet_of_month_data', null));
+  // IMPORTANT: Since we don't have a backend database, we must set a DEFAULT here for it to appear on the live site for all users.
+  // Edit the object below to change the global "Pet of the Month".
+  const defaultPetOfTheMonth = {
+    id: 'default-pom',
+    name: 'Luna',
+    breed: 'Labrador Mix',
+    age: '2 years',
+    gender: 'Female',
+    status: 'Available for Adoption', 
+    description: 'Luna is our featured pet! She is a sweet, energetic girl who loves fetch and belly rubs. She is great with kids and other dogs.',
+    image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=1000',
+    goodWithKids: true,
+    goodWithDogs: true,
+    goodWithCats: false
+  };
+
+  const [petOfTheMonthData, setPetOfTheMonthData] = useState(() => loadState('hfp_pet_of_month_data', defaultPetOfTheMonth));
 
   useEffect(() => {
     if (petOfTheMonthData) {
