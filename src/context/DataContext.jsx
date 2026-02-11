@@ -216,7 +216,30 @@ export function DataProvider({ children }) {
     }
   ];
 
-  const [organizations, setOrganizations] = useState(() => loadState('hfp_orgs_live', defaultOrgs));
+  const [organizations, setOrganizations] = useState(() => {
+    // We want to ensure the hardcoded "defaultOrgs" (like Rancho Cucamonga) are ALWAYS present,
+    // even if the user has a local copy of organizations in localStorage.
+    // So we load from localStorage, but we merge in the defaults if they are missing.
+    const localData = loadState('hfp_orgs_live', null);
+    
+    if (!localData) {
+        return defaultOrgs;
+    }
+
+    // Merge strategy:
+    // 1. Keep everything from localData (to preserve user's manual additions/edits)
+    // 2. Add any defaultOrgs that are NOT in localData (checking by ID)
+    // 3. OPTIONAL: Update defaultOrgs in localData if we want to force code updates (like new descriptions) to override local.
+    //    Let's go with "Code Overrides Local for Default Items" to ensure the new addresses/phones show up.
+    
+    const defaultIds = new Set(defaultOrgs.map(o => o.id));
+    
+    // Filter out the old versions of default orgs from local data
+    const userOrgs = localData.filter(o => !defaultIds.has(o.id));
+    
+    // Combine fresh defaults + user custom orgs
+    return [...defaultOrgs, ...userOrgs];
+  });
 
   useEffect(() => {
     localStorage.setItem('hfp_orgs_live', JSON.stringify(organizations));
