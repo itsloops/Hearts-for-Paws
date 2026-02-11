@@ -200,6 +200,19 @@ export function DataProvider({ children }) {
       userId: 'rc-admin',
       specialty: 'All Breeds',
       category: 'Shelter'
+    },
+    {
+      id: 'all-kind-abilene',
+      name: 'All Kind Animal Initiative',
+      location: '610 ES 11th Street, Abilene, Texas 79602',
+      description: 'All Kind Animal Initiative’s mission is to improve animal welfare through community resources, education and shelter care.',
+      contactEmail: 'info@allkindabilene.org',
+      phone: '(325) 698-0085',
+      website: 'https://www.allkindabilene.org',
+      image: null,
+      userId: 'all-kind-admin',
+      specialty: 'All Breeds',
+      category: 'Shelter'
     }
   ];
 
