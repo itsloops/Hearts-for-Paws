@@ -187,6 +187,19 @@ export function DataProvider({ children }) {
       contactEmail: 'org@hfp.com',
       image: null,
       userId: 'org1'
+    },
+    {
+      id: 'rc-animal-center',
+      name: 'Rancho Cucamonga Animal Center',
+      location: '11780 Arrow Route, Rancho Cucamonga, CA 91730',
+      description: 'Creating PAWsitive Impact by Enriching the Lives of Animals and People. Providing adoption, fostering, and wellness services to the community.',
+      contactEmail: 'RCPets@CityofRC.us',
+      phone: '(909) 466-7387',
+      website: 'https://www.cityofrc.us/animal-center',
+      image: null,
+      userId: 'rc-admin',
+      specialty: 'All Breeds',
+      category: 'Shelter'
     }
   ];
 
