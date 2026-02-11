@@ -176,6 +176,7 @@ export default function OrgDashboard() {
                                 <option>Fundraiser</option>
                                 <option>Volunteer Training</option>
                                 <option>Social Meetup</option>
+                                <option>Other</option>
                             </select>
                             <input type="email" placeholder="Contact Email" required className="p-2 border rounded" value={newEvent.contactEmail} onChange={e => setNewEvent({...newEvent, contactEmail: e.target.value})} />
                             <textarea placeholder="Description" className="md:col-span-2 p-2 border rounded" rows="3" value={newEvent.description} onChange={e => setNewEvent({...newEvent, description: e.target.value})}></textarea>
