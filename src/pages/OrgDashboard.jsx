@@ -8,7 +8,7 @@ export default function OrgDashboard() {
   const { currentUser } = useAuth();
   const { 
     organizations, addOrganization, deleteOrganization,
-    events, addEvent, deleteEvent,
+    events, addEvent, deleteEvent, updateEvent,
     donationRequests, addDonationRequest, deleteDonationRequest
   } = useData();
   const location = useLocation();
@@ -24,6 +24,9 @@ export default function OrgDashboard() {
   }, [location]);
   const [showAddEvent, setShowAddEvent] = useState(false);
   const [showAddWishlist, setShowAddWishlist] = useState(false);
+  
+  // Edit mode state for events
+  const [editingEventId, setEditingEventId] = useState(null);
 
   // Forms state
   const [newEvent, setNewEvent] = useState({ title: '', date: '', time: '', location: '', type: 'Adoption Drive', description: '', contactEmail: '' });
@@ -42,8 +45,25 @@ export default function OrgDashboard() {
 
   const handleCreateEvent = (e) => {
     e.preventDefault();
-    addEvent({ ...newEvent, id: Date.now(), userId: currentUser.id, orgId: myOrg.id });
+    if (editingEventId) {
+      updateEvent(editingEventId, newEvent);
+      setEditingEventId(null);
+    } else {
+      addEvent({ ...newEvent, id: Date.now(), userId: currentUser.id, orgId: myOrg.id });
+    }
     setShowAddEvent(false);
+    setNewEvent({ title: '', date: '', time: '', location: '', type: 'Adoption Drive', description: '', contactEmail: '' });
+  };
+
+  const handleEditEventClick = (event) => {
+    setNewEvent(event);
+    setEditingEventId(event.id);
+    setShowAddEvent(true);
+  };
+  
+  const handleCancelEventEdit = () => {
+    setShowAddEvent(false);
+    setEditingEventId(null);
     setNewEvent({ title: '', date: '', time: '', location: '', type: 'Adoption Drive', description: '', contactEmail: '' });
   };
 
@@ -165,7 +185,7 @@ export default function OrgDashboard() {
 
                 {showAddEvent && (
                     <div className="bg-gray-50 p-6 rounded-lg mb-8 border border-gray-200">
-                        <h3 className="font-bold mb-4">Create New Event</h3>
+                        <h3 className="font-bold mb-4">{editingEventId ? 'Edit Event' : 'Create New Event'}</h3>
                         <form onSubmit={handleCreateEvent} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <input type="text" placeholder="Event Title" required className="p-2 border rounded" value={newEvent.title} onChange={e => setNewEvent({...newEvent, title: e.target.value})} />
                             <input type="date" required className="p-2 border rounded" value={newEvent.date} onChange={e => setNewEvent({...newEvent, date: e.target.value})} />
@@ -181,8 +201,8 @@ export default function OrgDashboard() {
                             <input type="email" placeholder="Contact Email" required className="p-2 border rounded" value={newEvent.contactEmail} onChange={e => setNewEvent({...newEvent, contactEmail: e.target.value})} />
                             <textarea placeholder="Description" className="md:col-span-2 p-2 border rounded" rows="3" value={newEvent.description} onChange={e => setNewEvent({...newEvent, description: e.target.value})}></textarea>
                             <div className="md:col-span-2 flex justify-end gap-2">
-                                <button type="button" onClick={() => setShowAddEvent(false)} className="px-4 py-2 text-gray-600">Cancel</button>
-                                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Create Event</button>
+                                <button type="button" onClick={handleCancelEventEdit} className="px-4 py-2 text-gray-600">Cancel</button>
+                                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">{editingEventId ? 'Update Event' : 'Create Event'}</button>
                             </div>
                         </form>
                     </div>
@@ -195,7 +215,10 @@ export default function OrgDashboard() {
                                 <h3 className="font-bold">{event.title}</h3>
                                 <p className="text-sm text-gray-600">{event.date} • {event.location}</p>
                             </div>
-                            <button onClick={() => deleteEvent(event.id)} className="text-red-500 hover:text-red-700 p-2"><Trash2 size={18} /></button>
+                            <div className="flex gap-2">
+                                <button onClick={() => handleEditEventClick(event)} className="text-blue-500 hover:text-blue-700 p-2"><Edit size={18} /></button>
+                                <button onClick={() => deleteEvent(event.id)} className="text-red-500 hover:text-red-700 p-2"><Trash2 size={18} /></button>
+                            </div>
                         </div>
                     ))}
                     {myEvents.length === 0 && <p className="text-gray-500 text-center py-8">No events scheduled.</p>}
