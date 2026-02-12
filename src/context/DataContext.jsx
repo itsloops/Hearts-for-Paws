@@ -252,6 +252,19 @@ export function DataProvider({ children }) {
       userId: 'rivco-admin',
       specialty: 'All Breeds',
       category: 'Shelter'
+    },
+    {
+      id: 'beaver-county-humane-society',
+      name: 'Beaver County Humane Society',
+      location: '3394 Brodhead Rd, Aliquippa, PA 15001',
+      description: 'The mission of the Beaver County Humane Society is to protect and enhance the lives of all domestic animals and to promote kindness and respect for all living creatures. Our vision is a community that supports a humane, sustainable, and compassionate environment for all animals.',
+      contactEmail: 'info@beavercountyhumanesociety.org',
+      phone: '724-775-5801',
+      website: 'www.beavercountyhumanesociety.org',
+      image: null,
+      userId: 'bchs-admin',
+      specialty: 'All Breeds',
+      category: 'Shelter'
     }
   ];
 
