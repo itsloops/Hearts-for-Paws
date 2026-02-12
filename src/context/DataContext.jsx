@@ -221,7 +221,7 @@ export function DataProvider({ children }) {
       description: 'Westside German Shepherd Rescue of Los Angeles is a 501(c)(3) non-profit, no-kill rescue',
       contactEmail: 'info@sheprescue.org',
       phone: '(310) 202-7283',
-      website: 'https://www.sheprescue.org',
+      website: 'https://sheprescue.org',
       image: null,
       userId: 'west-side-gsr-admin',
       specialty: 'German Shepherd',
