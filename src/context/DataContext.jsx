@@ -226,6 +226,19 @@ export function DataProvider({ children }) {
       userId: 'west-side-gsr-admin',
       specialty: 'German Shepherd',
       category: 'Rescue Group'
+    },
+    {
+      id: 'palm-valley-animal-society',
+      name: 'Palm Valley Animal Society',
+      location: '2501 w. Trenton Rd., Edinburg, TX 78539',
+      description: 'PVAS is a 501(c) (3) non profit lifesaving leader in the Rio Grande Valley',
+      contactEmail: 'info@pcastx.org',
+      phone: '956-720-4563',
+      website: 'www.pcastx.org',
+      image: null,
+      userId: 'pvas-admin',
+      specialty: 'All Breeds',
+      category: 'Rescue Group'
     }
   ];
 
