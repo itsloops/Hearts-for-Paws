@@ -239,6 +239,19 @@ export function DataProvider({ children }) {
       userId: 'pvas-admin',
       specialty: 'All Breeds',
       category: 'Rescue Group'
+    },
+    {
+      id: 'riverside-county-animal-svcs',
+      name: 'Riverside County Dept. of Animal Svcs',
+      location: '6851 Van Buren Blvd, Jurupa Valley, CA',
+      description: 'Riverside County Department of Animal Services.',
+      contactEmail: 'shelterinfo@rivco.org',
+      phone: '(951) 343-0539',
+      website: 'https://rcdas.org/',
+      image: null,
+      userId: 'rivco-admin',
+      specialty: 'All Breeds',
+      category: 'Shelter'
     }
   ];
 
