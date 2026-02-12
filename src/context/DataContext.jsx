@@ -213,6 +213,19 @@ export function DataProvider({ children }) {
       userId: 'all-kind-admin',
       specialty: 'All Breeds',
       category: 'Shelter'
+    },
+    {
+      id: 'west-side-gsr',
+      name: 'West Side German Shepherd of Los Angeles',
+      location: '3016 S. Hill Street, 90007',
+      description: 'Westside German Shepherd Rescue of Los Angeles is a 501(c)(3) non-profit, no-kill rescue',
+      contactEmail: 'info@sheprescue.org',
+      phone: '(310) 202-7283',
+      website: 'www.sheprescue.org',
+      image: null,
+      userId: 'west-side-gsr-admin',
+      specialty: 'German Shepherd',
+      category: 'Rescue Group'
     }
   ];
 
